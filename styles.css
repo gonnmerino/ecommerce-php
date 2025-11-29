@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Segoe UI';
+  font-style: normal;
+  font-display: swap;
+  src: url("/src/fonts/Segoe-UI.woff2") format("woff2");
+}
