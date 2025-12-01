@@ -1,5 +1,4 @@
 <?php
-
 include 'includes/header.php';
 require_once 'includes/conexion.php';
 require_once 'includes/session.php';
@@ -9,294 +8,361 @@ if (!isset($admin) || $admin != 1) {
   exit;
 }
 
-$sql_usuarios = "SELECT id, email, activo, admin FROM usuarios ";
-$result_usuarios = $conn->query($sql_usuarios);
-$sql_productos = "SELECT p.id, p.nombre, p.descripcion, p.precio, p.stock, p.activo, p.sku,  p.imagen, p.fecha_creacion, c.nombre as categoria_nombre 
-                  FROM productos p 
-                  LEFT JOIN categorias c ON p.categoria_id = c.id";
-$result_productos = $conn->query($sql_productos);
+  $sql_usuarios = "SELECT id, email, activo, admin FROM usuarios";
+  $result_usuarios = $conn->query($sql_usuarios);
+
+  $sql_productos = "SELECT p.id, p.nombre, p.descripcion, p.precio, p.stock, p.activo, p.sku, p.imagen, p.fecha_creacion, c.nombre as categoria_nombre 
+                    FROM productos p 
+                    LEFT JOIN categorias c ON p.categoria_id = c.id";
+  $result_productos = $conn->query($sql_productos);
+
+  $total_productos = $result_productos->num_rows;
 ?>
 
-<body>
-  <div class="min-h-screen bg-[#fffefe]">
+<body class="bg-white">
+  <div class="min-h-screen">
     <?php include 'includes/nav.php'; ?>
 
-    <div class="md:flex flex-col mt-10 pb-10 mx-4 sm:mx-6 md:mx-8 lg:mx-16 xl:mx-24">
-      <ul class="flex-column space-y space-y-6 text-sm font-medium text-gray-500 dark:text-gray-400 md: mb-4 md:mb-0 select-none">
+    <div class="p-6">
+      <div class="mb-8">
+        <h1 class="text-2xl font-semibold text-gray-900">Admin Panel</h1>
+        <p class="text-gray-600 mt-1">Panel de administracion de cuentas, pruductos y su stock.</p>
+      </div>
 
-        <li class="bg-[#161618] rounded-lg">
-          <a id="btn-productos" onclick="toggleProductos()"
-            class="inline-flex cursor-pointer items-center px-4 py-3 rounded-lg hover:text-gray-900 hover:bg-gray-100 w-full dark:hover:bg-gray-700 dark:hover:text-white bg-gray-700 text-white"
-            aria-current="page">
-            <svg class="w-4 h-4 me-2 text-white dark:text-gray-400" aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
-              <path
-                d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z" />
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white border border-gray-200 rounded-lg p-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-600">Producto totales</p>
+              <p class="text-2xl font-semibold text-gray-900 mt-1"><?php echo $total_productos; ?></p>
+            </div>
+            <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-lg p-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-600">Activo</p>
+              <p class="text-2xl font-semibold text-gray-900 mt-1">
+                <?php 
+                $result_productos->data_seek(0);
+                $activos = 0;
+                while($row = $result_productos->fetch_assoc()) {
+                    if($row['activo'] == 1) $activos++;
+                }
+                echo $activos;
+                ?>
+              </p>
+            </div>
+            <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-lg p-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-600">Inactivo</p>
+              <p class="text-2xl font-semibold text-gray-900 mt-1">
+                <?php 
+                $result_productos->data_seek(0);
+                $inactivos = 0;
+                while($row = $result_productos->fetch_assoc()) {
+                    if($row['activo'] == 0) $inactivos++;
+                }
+                echo $inactivos;
+                ?>
+              </p>
+            </div>
+            <div class="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-lg p-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-600">Productos con Stock bajo</p>
+              <p class="text-2xl font-semibold text-gray-900 mt-1">
+                <?php 
+                $result_productos->data_seek(0);
+                $stock_bajo = 0;
+                while($row = $result_productos->fetch_assoc()) {
+                    if($row['stock'] < 6 && $row['stock'] > 0) $stock_bajo++;
+                }
+                echo $stock_bajo;
+                ?>
+              </p>
+            </div>
+            <div class="w-10 h-10 bg-yellow-50 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <div class="border-b border-gray-200">
+          <nav class="-mb-px flex space-x-8">
+            <button onclick="showSection('products')" id="products-tab" class="border-b-2 cursor-pointer border-black py-4 px-1 text-sm font-medium text-gray-900 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap">
+              Productos
+            </button>
+            <button onclick="showSection('users')" id="users-tab" class="border-b-2 cursor-pointer border-transparent py-4 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap">
+              Cuentas
+            </button>
+          </nav>
+        </div>
+      </div>
+
+      <div id="products-section">
+        <div class="mb-6 flex justify-between items-center">
+          <div class="relative w-80">
+            <input type="text" placeholder="Buscar productos..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black">
+            <svg class="w-5 h-5 absolute left-3 top-2.5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
             </svg>
-            Productos
-          </a>
+          </div>
+          <button class="bg-black text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 cursor-pointer transition-colors">
+            Añadir un producto
+          </button>
+        </div>
 
-          <div id="productos-admin" style="display: block;" class="relative overflow-x-auto shadow-md sm:rounded-lg mt-4">
-            <div
-              class="flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 bg-white dark:bg-gray-900">
-              <div>
-                <button id="dropdownActionButtonProductos" data-dropdown-toggle="dropdownActionProductos"
-                  class="inline-flex items-center ml-4 text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                  type="button">
-                  <span class="sr-only">Action button</span>
-                  Acción
-                  <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 10 6">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="m1 1 4 4 4-4" />
-                  </svg>
-                </button>
-                <div id="dropdownActionProductos"
-                  class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600">
-                  <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                    aria-labelledby="dropdownActionButtonProductos">
-                    <li>
-                      <a href="#"
-                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Activar productos</a>
-                    </li>
-                    <li>
-                      <a href="#"
-                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Desactivar productos</a>
-                    </li>
-                    <li>
-                      <a href="#"
-                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Editar stock</a>
-                    </li>
-                  </ul>
-                  <div class="py-1">
-                    <a href="#"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Eliminar productos</a>
-                  </div>
-                </div>
-              </div>
-              <label for="table-search-productos" class="sr-only">Search</label>
-              <div class="relative">
-                <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-                  <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                  </svg>
-                </div>
-                <input type="text" id="table-search-productos"
-                  class="block p-2 mr-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Buscar un producto...">
-              </div>
-            </div>
+        <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Producto</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SKU</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <?php
+              $result_productos->data_seek(0);
+              if ($result_productos->num_rows > 0) {
+                while ($row = $result_productos->fetch_assoc()) {
+                  $estado = $row['activo'] == 1 ? 'Activo' : 'Inactivo';
+                  $estado_class = $row['activo'] == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+                  $precio_formateado = number_format($row['precio'], 2, ',', '.');
+                  $imagen_producto = !empty($row['imagen']) ? $row['imagen'] : 'image-placeholder.jpg';
 
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-              <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" class="p-4">
-                    <div class="flex items-center">
-                      <input id="selectAllProductos" onclick="toggleAllProductosCheckboxes()" type="checkbox"
-                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                      <label for="selectAllProductos" class="sr-only">checkbox</label>
-                    </div>
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                    Nombre
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                    SKU
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                    Precio
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                    Stock
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                    Categoría
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                    Estado
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                    Acción
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php
-                if ($result_productos->num_rows > 0) {
-                  while ($row = $result_productos->fetch_assoc()) {
-                    $estado = $row['activo'] == 1 ? 'Activo' : 'Inactivo';
-                    $color_estado = $row['activo'] == 1 ? 'bg-green-500' : 'bg-red-500';
-                    $precio_formateado = number_format($row['precio'], 2, ',', '.');
-
-                    echo "
-                    <tr class='bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600'>
-                      <td class='w-4 p-4'>
-                        <div class='flex items-center'>
-                          <input id='checkbox-producto-{$row['id']}' type='checkbox' class='checkbox-producto w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'>
-                          <label for='checkbox-producto-{$row['id']}' class='sr-only'>checkbox</label>
+                  echo "
+                  <tr class='hover:bg-gray-50'>
+                    <td class='px-6 py-4 whitespace-nowrap'>
+                      <div class='flex items-center'>
+                        <div class='h-10 w-10 flex-shrink-0'>
+                          <img class='h-10 w-10 rounded object-cover' src='src/images/" . htmlspecialchars($imagen_producto) . "' alt='" . htmlspecialchars($row['nombre']) . "'>
                         </div>
-                      </td>
-                        <th scope='row' class='flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white'>
-                          <div class='ps-3'>
-                            <div class='text-base font-semibold'>" . htmlspecialchars($row['nombre']) . "</div>
-                            <div class='font-normal text-gray-500'>" . htmlspecialchars(substr($row['descripcion'], 0, 50)) . "...</div>
-                          </div>
-                        </th>
-                          <td class='px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white'>" . htmlspecialchars($row['sku']) . "</td>
-                          <td class='px-6 py-4'>$" . $precio_formateado . "</td>
-                          <td class='px-6 py-4'>" . $row['stock'] . "</td>
-                          <td class='px-6 py-4'>" . htmlspecialchars($row['categoria_nombre']) . "</td>
-                          <td class='px-6 py-4'>
-                            <div class='flex items-center'>
-                              <div class='h-2.5 w-2.5 rounded-full $color_estado me-2'></div> $estado
-                            </div>
-                      </td>
-                        <td class='px-6 py-4'>
-                          <a href='editar_producto.php?id={$row['id']}' class='font-medium text-blue-600 dark:text-blue-500 hover:underline'>Editar</a>
-                        </td>
-                    </tr>";
-                  }
-                } else {
-                  echo "<tr><td colspan='8' class='px-6 py-4 text-center'>No hay productos registrados</td></tr>";
+                        <div class='ml-4'>
+                          <div class='text-sm font-medium text-gray-900'>" . htmlspecialchars($row['nombre']) . "</div>
+                          <div class='text-sm text-gray-500'>" . htmlspecialchars($row['categoria_nombre']) . "</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>" . htmlspecialchars($row['sku']) . "</td>
+                    <td class='px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium'>$" . $precio_formateado . "</td>
+                    <td class='px-6 py-4 whitespace-nowrap'>
+                      <div class='text-sm text-gray-900'>" . $row['stock'] . "</div>
+                      " . ($row['stock'] < 6 ? "<div class='text-xs text-yellow-600'>Stock bajo</div>" : "") . "
+                    </td>
+                    <td class='px-6 py-4 whitespace-nowrap'>
+                      <span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium $estado_class'>
+                        $estado
+                      </span>
+                    </td>
+                    <td class='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
+                      <button onclick='openModalEdit(this)' 
+                      data-id='" . $row['id'] . "' 
+                      data-nombre='" . $row['nombre'] . "'
+                      data-precio='" . $row['precio'] . "' 
+                      data-stock='" . $row['stock'] . "' 
+                      data-imagen='" . $row['imagen'] . "' 
+                      class='text-gray-600 cursor-pointer hover:text-gray-900 mr-4'>Editar</button>
+                      <button class='text-red-600 hover:text-red-900 cursor-pointer'>Eliminar</button>
+                    </td>
+                  </tr>";
                 }
-                ?>
-              </tbody>
-            </table>
-          </div>
-        </li>
-
-        <li>
-          <a id="btn-cuentas" onclick="toggleCuentas()"
-            class="inline-flex cursor-pointer items-center px-4 py-3 rounded-lg hover:text-gray-900 hover:bg-gray-100 w-full dark:hover:bg-gray-700 dark:hover:text-white bg-[#161618] text-gray-400"
-            aria-current="page">
-            <svg class="w-4 h-4 me-2 text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-300"
-              aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z" />
-            </svg>Cuentas
-          </a>
-
-          <div id="cuentas-admin" style="display: none;" class="relative overflow-x-auto shadow-md sm:rounded-lg mt-4">
-            <div
-              class="flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 bg-white dark:bg-gray-900">
-            </div>
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-              <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              } else {
+                echo "
                 <tr>
-                  <th scope="col" class="p-4">
-                    <div class="flex items-center">
-                      <input id="selectAllCheckbox" onclick="toggleAllCheckboxes()" type="checkbox"
-                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                      <label for="selectAllCheckbox" class="sr-only">checkbox</label>
-                    </div>
-                  </th>
-                  <th scope="col" class="px-6 py-3">Email</th>
-                  <th scope="col" class="px-6 py-3">Tipo de Usuario</th>
-                  <th scope="col" class="px-6 py-3">Cuenta Activa</th>
-                  <th scope="col" class="px-6 py-3">Acción</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php
-                if ($result_usuarios->num_rows > 0) {
-                  while ($row = $result_usuarios->fetch_assoc()) {
-                    $tipo_usuario = $row['admin'] == 1 ? 'Administrador' : 'Usuario';
-                    $estado_cuenta = $row['activo'] == 1 ? 'Activa' : 'Inactiva';
+                  <td colspan='6' class='px-6 py-12 text-center text-gray-500'>
+                    <svg class='w-12 h-12 mx-auto mb-4 text-gray-400' fill='currentColor' viewBox='0 0 20 20'>
+                      <path fill-rule='evenodd' d='M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z' clip-rule='evenodd'/>
+                    </svg>
+                    No se encontraron productos
+                  </td>
+                </tr>";
+              }
+              ?>
+            </tbody>
+          </table>
+        </div>
 
-                    echo 
-                      "<tr class='bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600'>
-                        <td class='w-4 p-4'>
-                          <div class='flex items-center'>
-                            <input id='checkbox-for-account-{$row['id']}' type='checkbox' class='checkbox-for-account w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'>
-                            <label for='checkbox-for-account-{$row['id']}' class='sr-only'>checkbox</label>
-                          </div>
-                        </td>
-                          <th scope='row' class='flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white'>
-                            <div class='ps-3'>
-                              <div class='text-base font-semibold'>" . htmlspecialchars($row['email']) . "</div>
-                            </div>
-                          </th>
-                          <td class='px-6 py-4'>" . $tipo_usuario . "</td>
-                          <td class='px-6 py-4'>
-                            <div class='flex items-center'>
-                              <div class='me-2'></div> " . $estado_cuenta . "
-                            </div>
-                          </td>
-                        <td class='px-6 py-4'>
-                          <a href='editar_usuario.php?id={$row['id']}' class='font-medium text-blue-600 dark:text-blue-500 hover:underline'>Editar</a>
-                        </td>
-                       </tr>";
-                  }
-                } else {
-                  echo "<tr><td colspan='5' class='px-6 py-4 text-center'>No hay usuarios registrados</td></tr>";
-                }
-                ?>
-              </tbody>
-            </table>
+        <div class="fixed inset-0 bg-black opacity-50 z-40 hidden" id="modalBackdrop"></div>
+        <div class="fixed inset-0 flex items-center justify-center hidden z-50" id="modalContent">
+          <div class="bg-white p-6 rounded-sm shadow-lg w-full max-w-lg mx-4 border border-gray-300">
+            <h3 class="text-lg font-bold mb-4 text-gray-900">Editar producto</h3>
+            <form id="editProductoForm" method="POST" action="includes\actualizar_producto.php" enctype="multipart/form-data">
+              <input type="hidden" name="id" id="editProductId">
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                  <input type="text" name="nombre" id="editNombre" class="w-full border border-gray-300 px-3 py-2 rounded-sm">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1" >Precio</label>
+                  <input type="number" name="precio" min="0" id="editPrecio" class="w-full border border-gray-300 px-3 py-2 rounded-sm">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+                  <input type="number" name="stock" min="0" id="editStock" class="w-full border border-gray-300 px-3 py-2 rounded-sm">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1" >Imagen</label>
+                  <input type="file" name="imagen" id="editImagen" class="w-full cursor-pointer border border-gray-300 px-3 py-2 rounded-sm">
+                </div>
+              </div>
+              <div class="flex justify-end space-x-3 mt-6">
+                <button type="button" onclick="closeModalEdit()" class="px-4 py-2 border border-gray-300 rounded-sm cursor-pointer hover:bg-gray-200">
+                  Cancelar
+                </button>
+                <button type="submit" class="px-4 py-2 bg-black text-white rounded-sm cursor-pointer hover:bg-gray-800">
+                  Guardar
+                </button>
+              </div>
+            </form>
           </div>
-        </li>
-      </ul>
+        </div>
+      </div>
+
+      <div id="users-section" class="hidden">
+        <div class="mb-6">
+          <div class="relative w-80">
+            <input type="text" placeholder="Buscar Cuentas..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black">
+            <svg class="w-5 h-5 absolute left-3 top-2.5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo de cuenta</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado de la cuenta</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <?php
+              if ($result_usuarios->num_rows > 0) {
+                while ($row = $result_usuarios->fetch_assoc()) {
+                  $tipo_usuario = $row['admin'] == 1 ? 'Admin' : 'Usuario';
+                  $tipo_class = $row['admin'] == 1 ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800';
+                  $estado_cuenta = $row['activo'] == 1 ? 'Activa' : 'Inactiva';
+                  $estado_class = $row['activo'] == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+
+                  echo "
+                  <tr class='hover:bg-gray-50'>
+                    <td class='px-6 py-4 whitespace-nowrap'>
+                      <div class='flex items-center'>
+                        <div class='h-10 w-10 flex-shrink-0 bg-gray-200 rounded-full flex items-center justify-center'>
+                          <svg class='w-5 h-5 text-gray-500' fill='currentColor' viewBox='0 0 20 20'>
+                            <path fill-rule='evenodd' d='M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z' clip-rule='evenodd'/>
+                          </svg>
+                        </div>
+                        <div class='ml-4'>
+                          <div class='text-sm font-medium text-gray-900'>" . htmlspecialchars($row['email']) . "</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class='px-6 py-4 whitespace-nowrap'>
+                      <span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium $tipo_class'>
+                        $tipo_usuario
+                      </span>
+                    </td>
+                    <td class='px-6 py-4 whitespace-nowrap'>
+                      <span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium $estado_class'>
+                        $estado_cuenta
+                      </span>
+                    </td>
+                    <td class='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
+                      <button class='text-gray-600 cursor-pointer hover:text-gray-900'>Editar</button>
+                    </td>
+                  </tr>";
+                }
+              } else {
+                echo "
+                <tr>
+                  <td colspan='4' class='px-6 py-12 text-center text-gray-500'>
+                    <svg class='w-12 h-12 mx-auto mb-4 text-gray-400' fill='currentColor' viewBox='0 0 20 20'>
+                      <path fill-rule='evenodd' d='M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z' clip-rule='evenodd'/>
+                    </svg>
+                    No se encontraron usuarios
+                  </td>
+                </tr>";
+              }
+              ?>
+            </tbody>
+          </table>
+        </div>  
+      </div>
     </div>
   </div>
 
   <script>
-    const productos_show = document.getElementById('productos-admin');
-    const btn_productos = document.getElementById('btn-productos');
-    const cuentas_show = document.getElementById('cuentas-admin');
-    const btn_cuentas = document.getElementById('btn-cuentas');
-
-    function toggleProductos() {
-      if (productos_show.style.display === 'none' || productos_show.style.display === '') {
-        productos_show.style.display = 'block';
-        btn_productos.classList.add('bg-gray-700', 'text-white');
-        btn_productos.classList.remove('hover:text-gray-900', 'text-gray-400');
-
-        cuentas_show.style.display = 'none';
-        btn_cuentas.classList.remove('bg-gray-700', 'text-white');
-        btn_cuentas.classList.add('hover:text-gray-900', 'text-gray-400');
-      } else {
-        productos_show.style.display = 'none';
-        btn_productos.classList.remove('bg-gray-700', 'text-white');
-        btn_productos.classList.add('hover:text-gray-900', 'text-gray-400');
-      }
+    function openModalEdit(button) {
+      const id = button.getAttribute('data-id');
+      const nombre = button.getAttribute('data-nombre');
+      const precio = button.getAttribute('data-precio');
+      const stock = button.getAttribute('data-stock');
+      const imagen = button.getAttribute('data-imagen');
+      
+      document.getElementById('editProductId').value = id;
+      document.getElementById('editNombre').value = nombre;
+      document.getElementById('editPrecio').value = precio;
+      document.getElementById('editStock').value = stock;
+      document.getElementById('editImagen').value = '';
+      document.getElementById('modalBackdrop').classList.remove('hidden');
+      document.getElementById('modalContent').classList.remove('hidden');
     }
 
-    function toggleCuentas() {
-      if (cuentas_show.style.display === 'none' || cuentas_show.style.display === '') {
-        cuentas_show.style.display = 'block';
-        btn_cuentas.classList.add('bg-gray-700', 'text-white');
-        btn_cuentas.classList.remove('hover:text-gray-900', 'text-gray-400');
-
-        productos_show.style.display = 'none';
-        btn_productos.classList.remove('bg-gray-700', 'text-white');
-        btn_productos.classList.add('hover:text-gray-900', 'text-gray-400');
-      } else {
-        cuentas_show.style.display = 'none';
-        btn_cuentas.classList.remove('bg-gray-700', 'text-white');
-        btn_cuentas.classList.add('hover:text-gray-900', 'text-gray-400');
-      }
+    function closeModalEdit() {
+      document.getElementById('modalBackdrop').classList.add('hidden');
+      document.getElementById('modalContent').classList.add('hidden');
     }
 
-    function toggleAllProductosCheckboxes() {
-      const selectAllProductos = document.getElementById('selectAllProductos');
-      const checkboxesProductos = document.getElementsByClassName('checkbox-producto');
+    function showSection(section) {
+      document.getElementById('products-section').classList.add('hidden');
+      document.getElementById('users-section').classList.add('hidden');
 
-      for (let i = 0; i < checkboxesProductos.length; i++) {
-        checkboxesProductos[i].checked = selectAllProductos.checked;
-      }
-    }
+      document.getElementById('products-tab').classList.remove('border-black', 'text-gray-900');
+      document.getElementById('products-tab').classList.add('border-transparent', 'text-gray-500');
+      document.getElementById('users-tab').classList.remove('border-black', 'text-gray-900');
+      document.getElementById('users-tab').classList.add('border-transparent', 'text-gray-500');
 
-    function toggleAllCheckboxes() {
-      const selectAllCheckbox = document.getElementById('selectAllCheckbox');
-      const checkboxes = document.getElementsByClassName('checkbox-for-account');
-
-      for (let i = 0; i < checkboxes.length; i++) {
-        checkboxes[i].checked = selectAllCheckbox.checked;
-      }
+      document.getElementById(section + '-section').classList.remove('hidden');
+      document.getElementById(section + '-tab').classList.add('border-black', 'text-gray-900');
+      document.getElementById(section + '-tab').classList.remove('border-transparent', 'text-gray-500');
     }
   </script>
 </body>
-
 </html>

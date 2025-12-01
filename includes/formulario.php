@@ -44,17 +44,15 @@
                 switchText.textContent = '¿No tenes cuenta?';
                 switchMode.textContent =  '¡Registrate acá!';
 
-                //Oculta los botones que no son para login
                 repeatPasswordContainer.classList.add('hidden');
                 termsContainer.classList.add('hidden');
 
-                //Quita la obligacion de repetir contraseña y aceptar terminos
                 repeatPasswordInput.removeAttribute('required');
                 termsCheckBox.removeAttribute('required');
 
                 form.action = 'includes/login_usuario.php';
         
-            } else { //Modo registro
+            } else {
                 submitBtn.textContent = 'Crear cuenta';
                 switchText.textContent = '¿Ya tenes cuenta?';
                 switchMode.textContent =  '¡Entra acá!';

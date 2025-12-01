@@ -1,12 +1,11 @@
 <?php
-// ... Lógica PHP (NO TOCADA) ...
 require_once("session.php");
 require("conexion.php");
 
 $user_display = "";
 $profile_link = "../cuenta.php";
 $estaLogueado = isset($_SESSION['user']);
-$esAdmin = isset($admin) && $admin == 1; // Variable de control clara
+$esAdmin = isset($admin) && $admin == 1;
 
 if (isset($_SESSION['user'])) {
   $user_display = $_SESSION['user'];
@@ -117,6 +116,8 @@ $categorias->data_seek(0);
   <div class="flex gap-8 text-sm text-gray-400 max-w-7xl mx-auto justify-center">
     <ul class="flex gap-8 font-normal items-center antialiased">
     
+        <!-- TODO SI CLICKEAS "COMPONENTES" DEBERIA DE MOSTRAR TODOS LOS PRODUCTOS DE SUS SUB-CATEGORIAS PERO MUESTRA PAGINA EN BLANCO -->
+
     <?php while ($cat = $categorias->fetch_assoc()) { 
         $tieneSubcategorias = isset($subcategorias[$cat['id']]) && !empty($subcategorias[$cat['id']]);
     ?>
@@ -124,7 +125,7 @@ $categorias->data_seek(0);
             <?php if ($tieneSubcategorias): ?>
                 <!-- Categoria CON subcategorias - con dropdown Template-->
                 <form method="POST" action="productos.php" style="display:inline;">
-                    <input type="hidden" name="cat" value="<?= $cat['id'] ?>">
+                    <input type="hidden" name="cat" value="<?= $cat['id'] //MENU NAV NORML  ?>">
                     <button class="hover:text-white transition-colors duration-200 py-2 inline-block "
                             style="background:none;border:none;color:inherit;cursor:pointer;font:inherit;">
                         <?= htmlspecialchars($cat['nombre']) ?>
@@ -136,7 +137,7 @@ $categorias->data_seek(0);
                 
                 <div class="absolute top-full left-0 mt-2 w-48 bg-[#010001] rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 ">
                     <div class="py-2">
-                        <?php foreach ($subcategorias[$cat['id']] as $subcat): ?>
+                        <?php foreach ($subcategorias[$cat['id']] as $subcat): // SI TIENE SUBCATGORIA -> ?>
                             <form method="POST" action="productos.php" style="display:block;">
                                 <input type="hidden" name="cat" value="<?= $subcat['id'] ?>">
                                 <button class="w-full text-left px-4 py-2 text-sm text-gray-300  hover:text-white transition-colors duration-150"
@@ -214,14 +215,14 @@ $categorias->data_seek(0);
                 <input type="hidden" name="cat" value="<?= $cat['id'] ?>">
                 <button class="block py-2 hover:text-gray-300 transition-colors duration-200 text-lg font-semibold w-full text-left"
                         style="background:none;border:none;color:inherit;cursor:pointer;">
-                    <?= htmlspecialchars($cat['nombre']) ?>
+                    <?= htmlspecialchars($cat['nombre']) // MENU NAV NORMAL MOBILE ?>
                     <?php if ($tieneSubcategorias): ?>
                         <span class="text-gray-400 text-sm ml-2">▼</span>
                     <?php endif; ?>
                 </button>
             </form>
             
-            <?php if ($tieneSubcategorias): ?>
+            <?php if ($tieneSubcategorias): // SI TIENE SUBCATGORIA -> MOIBLE?>
                 <ul class="ml-4 mt-2 space-y-1 pb-2">
                     <?php foreach ($subcategorias[$cat['id']] as $subcat): ?>
                         <li>
