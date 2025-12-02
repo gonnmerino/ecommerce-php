@@ -123,7 +123,7 @@ $categorias->data_seek(0);
     ?>
         <li class="relative group <?php echo $tieneSubcategorias ? 'dropdown-item' : ''; ?>">
             <?php if ($tieneSubcategorias): ?>
-                <!-- Categoria CON subcategorias - con dropdown Template-->
+                <!--dropdown Template-->
                 <form method="POST" action="productos.php" style="display:inline;">
                     <input type="hidden" name="cat" value="<?= $cat['id'] //MENU NAV NORML  ?>">
                     <button class="hover:text-white transition-colors duration-200 py-2 inline-block "

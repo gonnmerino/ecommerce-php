@@ -3,6 +3,7 @@ include 'includes/header.php';
 require_once 'includes/conexion.php';
 require_once 'includes/session.php';
 
+
 if (!isset($admin) || $admin != 1) {
   Header('Location: index.php');
   exit;
@@ -11,7 +12,7 @@ if (!isset($admin) || $admin != 1) {
   $sql_usuarios = "SELECT id, email, activo, admin FROM usuarios";
   $result_usuarios = $conn->query($sql_usuarios);
 
-  $sql_productos = "SELECT p.id, p.nombre, p.descripcion, p.precio, p.stock, p.activo, p.sku, p.imagen, p.fecha_creacion, c.nombre as categoria_nombre 
+  $sql_productos = "SELECT p.id, p.nombre, p.descripcion, p.precio, p.stock, p.activo, p.sku, p.imagen, p.categoria_id, p.fecha_creacion, c.nombre as categoria_nombre 
                     FROM productos p 
                     LEFT JOIN categorias c ON p.categoria_id = c.id";
   $result_productos = $conn->query($sql_productos);
@@ -22,6 +23,28 @@ if (!isset($admin) || $admin != 1) {
 <body class="bg-white">
   <div class="min-h-screen">
     <?php include 'includes/nav.php'; ?>
+
+    <?php
+     // PRUEBAS
+        
+
+        //Tuesday, December 2, 2025, 02:14:09am
+
+        //TD22025021409
+
+        //$SKU =
+
+        //$nuevoNombre = 'Ryzen 5 5600g';
+
+        //$nuevoNombre = str_replace(' ', '-', strtolower($nuevoNombre));
+
+        //$fechaHoraActual = date('YmdHis');
+
+        //$SKU = $nuevoNombre . $fechaHoraActual;
+
+
+    ?>
+
 
     <div class="p-6">
       <div class="mb-8">
@@ -130,12 +153,12 @@ if (!isset($admin) || $admin != 1) {
       <div id="products-section">
         <div class="mb-6 flex justify-between items-center">
           <div class="relative w-80">
-            <input type="text" placeholder="Buscar productos..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black">
+            <input type="text" placeholder="Buscar Productos..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black">
             <svg class="w-5 h-5 absolute left-3 top-2.5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
             </svg>
           </div>
-          <button class="bg-black text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 cursor-pointer transition-colors">
+          <button onclick="añadirNuevoProducto()" class="bg-black text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 cursor-pointer transition-colors">
             Añadir un producto
           </button>
         </div>
@@ -164,10 +187,10 @@ if (!isset($admin) || $admin != 1) {
 
                   echo "
                   <tr class='hover:bg-gray-50'>
-                    <td class='px-6 py-4 whitespace-nowrap'>
+                    <td id='col1' class='px-6 py-4 whitespace-nowrap bg-red'>
                       <div class='flex items-center'>
                         <div class='h-10 w-10 flex-shrink-0'>
-                          <img class='h-10 w-10 rounded object-cover' src='src/images/" . htmlspecialchars($imagen_producto) . "' alt='" . htmlspecialchars($row['nombre']) . "'>
+                          <img  class='h-10 w-10 rounded object-cover' src='src/images/" . htmlspecialchars($imagen_producto . '?v=' . time())  . "' alt='" . htmlspecialchars($row['nombre']) . "'>
                         </div>
                         <div class='ml-4'>
                           <div class='text-sm font-medium text-gray-900'>" . htmlspecialchars($row['nombre']) . "</div>
@@ -175,26 +198,27 @@ if (!isset($admin) || $admin != 1) {
                         </div>
                       </div>
                     </td>
-                    <td class='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>" . htmlspecialchars($row['sku']) . "</td>
-                    <td class='px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium'>$" . $precio_formateado . "</td>
-                    <td class='px-6 py-4 whitespace-nowrap'>
+                    <td id='col2' class='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>" . htmlspecialchars($row['sku']) . "</td>
+                    <td id='col3' class='px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium'>$" . $precio_formateado . "</td>
+                    <td id='col4' class='px-6 py-4 whitespace-nowrap'>
                       <div class='text-sm text-gray-900'>" . $row['stock'] . "</div>
                       " . ($row['stock'] < 6 ? "<div class='text-xs text-yellow-600'>Stock bajo</div>" : "") . "
                     </td>
-                    <td class='px-6 py-4 whitespace-nowrap'>
+                    <td id='col5' class='px-6 py-4 whitespace-nowrap'>
                       <span class='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium $estado_class'>
                         $estado
                       </span>
                     </td>
-                    <td class='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
-                      <button onclick='openModalEdit(this)' 
+                    <td id='col6' class='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
+                      <button id='edit-btn' onclick='openModalEdit(this)' 
                       data-id='" . $row['id'] . "' 
                       data-nombre='" . $row['nombre'] . "'
+                      data-categoria='" . $row['categoria_id'] . "'
                       data-precio='" . $row['precio'] . "' 
                       data-stock='" . $row['stock'] . "' 
                       data-imagen='" . $row['imagen'] . "' 
                       class='text-gray-600 cursor-pointer hover:text-gray-900 mr-4'>Editar</button>
-                      <button class='text-red-600 hover:text-red-900 cursor-pointer'>Eliminar</button>
+                      <button type='submit' id='deslistar-btn' onclick='deslistar()' class='text-red-600 hover:text-red-900 cursor-pointer'>Deslistar</button>
                     </td>
                   </tr>";
                 }
@@ -217,33 +241,46 @@ if (!isset($admin) || $admin != 1) {
         <div class="fixed inset-0 bg-black opacity-50 z-40 hidden" id="modalBackdrop"></div>
         <div class="fixed inset-0 flex items-center justify-center hidden z-50" id="modalContent">
           <div class="bg-white p-6 rounded-sm shadow-lg w-full max-w-lg mx-4 border border-gray-300">
-            <h3 class="text-lg font-bold mb-4 text-gray-900">Editar producto</h3>
-            <form id="editProductoForm" method="POST" action="includes\actualizar_producto.php" enctype="multipart/form-data">
+            <h3 id="tituloModal" class="text-lg font-bold mb-4 text-gray-900"></h3>
+            <form id="editProductoForm" method="POST" action="" enctype="multipart/form-data">
               <input type="hidden" name="id" id="editProductId">
               <div class="space-y-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
-                  <input type="text" name="nombre" id="editNombre" class="w-full border border-gray-300 px-3 py-2 rounded-sm">
+                  <input type="text" name="nombre" id="editNombre" required placeholder="Nombre del producto" class="w-full border border-gray-300 px-3 py-2 rounded-sm">
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1" >Precio</label>
-                  <input type="number" name="precio" min="0" id="editPrecio" class="w-full border border-gray-300 px-3 py-2 rounded-sm">
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Categoria</label>
+                  <select name="categoria_id" id="editCategoria" class="w-full border border-gray-300 px-3 py-2 rounded-sm" required>
+                      <option value="">Seleccionar...</option>
+                      <?php $sql_categorias = "SELECT id, nombre FROM categorias";
+                            $result_categorias = $conn->query($sql_categorias);
+                              if ($result_categorias->num_rows > 0) {
+                                while ($cat = $result_categorias->fetch_assoc()) {
+                                  echo "<option value='{$cat['id']}'>{$cat['nombre']}</option>";
+                                }
+                              }
+                      ?>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Precio</label>
+                  <input type="number" name="precio" min="0" id="editPrecio" required placeholder="Coloca un precio al producto" class="w-full border border-gray-300 px-3 py-2 rounded-sm">
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">Stock</label>
-                  <input type="number" name="stock" min="0" id="editStock" class="w-full border border-gray-300 px-3 py-2 rounded-sm">
+                  <input type="number" name="stock" min="0"required id="editStock"  placeholder="¿Cuantas unidades tiene el producto?" class="w-full border border-gray-300 px-3 py-2 rounded-sm">
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1" >Imagen</label>
-                  <input type="file" name="imagen" id="editImagen" class="w-full cursor-pointer border border-gray-300 px-3 py-2 rounded-sm">
+                  <input type="file" name="imagen" id="editImagen" placeholder="Pone una imagen al producto" class="w-full cursor-pointer border border-gray-300 px-3 py-2 rounded-sm">
                 </div>
               </div>
               <div class="flex justify-end space-x-3 mt-6">
                 <button type="button" onclick="closeModalEdit()" class="px-4 py-2 border border-gray-300 rounded-sm cursor-pointer hover:bg-gray-200">
                   Cancelar
                 </button>
-                <button type="submit" class="px-4 py-2 bg-black text-white rounded-sm cursor-pointer hover:bg-gray-800">
-                  Guardar
+                <button id="guardar-btn" type="submit" class="px-4 py-2 bg-black text-white rounded-sm cursor-pointer hover:bg-gray-800">
                 </button>
               </div>
             </form>
@@ -320,6 +357,7 @@ if (!isset($admin) || $admin != 1) {
                   </td>
                 </tr>";
               }
+              
               ?>
             </tbody>
           </table>
@@ -329,15 +367,48 @@ if (!isset($admin) || $admin != 1) {
   </div>
 
   <script>
+
+    function añadirNuevoProducto() {
+      document.getElementById('editProductoForm').reset();
+      document.getElementById('editProductId').value = "";
+      document.getElementById('modalBackdrop').classList.remove('hidden');
+      document.getElementById('modalContent').classList.remove('hidden');
+      document.getElementById('tituloModal').textContent = "Añade un nuevo producto"
+      document.getElementById('guardar-btn').textContent = "Añadir"
+      document.getElementById("editProductoForm").action = "includes/añadir_producto.php";
+    }
+
+    function deslistar() {
+      document.getElementById('deslistar-btn').addEventListener('click', function () {
+        
+        const col1 = document.getElementById('col1');
+        const col2 = document.getElementById('col2')
+        const col3 = document.getElementById('col3')
+        const col4 = document.getElementById('col4')
+        const col5 = document.getElementById('col5')
+        const col6 = document.getElementById('col6')
+        col1.classList.add('opacity-40')
+        col2.classList.add('opacity-40')
+        col3.classList.add('opacity-40')
+        col4.classList.add('opacity-40')
+        col5.classList.add('opacity-40')
+        col6.classList.add('opacity-40')
+      })
+    }
+
     function openModalEdit(button) {
+      document.getElementById("editProductoForm").action = "includes/actualizar_producto.php";
+      document.getElementById('tituloModal').textContent = "Edita un producto"
+      document.getElementById('guardar-btn').textContent = "Guardar cambios"
       const id = button.getAttribute('data-id');
       const nombre = button.getAttribute('data-nombre');
+      const categoria = button.getAttribute('data-categoria');
       const precio = button.getAttribute('data-precio');
       const stock = button.getAttribute('data-stock');
       const imagen = button.getAttribute('data-imagen');
-      
       document.getElementById('editProductId').value = id;
       document.getElementById('editNombre').value = nombre;
+      document.getElementById("editCategoria").value = categoria;
       document.getElementById('editPrecio').value = precio;
       document.getElementById('editStock').value = stock;
       document.getElementById('editImagen').value = '';

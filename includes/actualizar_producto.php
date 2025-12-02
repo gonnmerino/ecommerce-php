@@ -5,9 +5,9 @@ require 'conexion.php';
   $id = $_POST['id'];
 
   $nuevoNombre = trim($_POST['nombre']);
+  $nuevaCategoria = trim($_POST['categoria_id']);
   $nuevoPrecio = trim($_POST['precio']);
   $nuevoStock = trim($_POST['stock']);
-  $imagen = trim($_POST['imagen']);
   $nuevaImagen = null;
 
   $sql = "SELECT imagen FROM productos WHERE id = ?";
@@ -23,21 +23,20 @@ require 'conexion.php';
   if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
 
       $extension = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
-
       $nombreLimpio = strtolower(
           preg_replace('/[^a-zA-Z0-9]+/', '-', $nuevoNombre)
       );
-
       $nombreFinal = $nombreLimpio . '-' . $id . '.' . $extension;
       $destino = __DIR__ . '/../src/images/' . $nombreFinal;
 
       move_uploaded_file($_FILES['imagen']['tmp_name'], $destino);
       $nuevaImagen = $nombreFinal;
+      
   }
 
-  $sql = 'UPDATE productos SET nombre = ?, precio =?, stock = ?, imagen = ? WHERE id = ?';
+  $sql = 'UPDATE productos SET nombre = ?, categoria_id = ?, precio =?, stock = ?, imagen = ? WHERE id = ?';
   $stmt = $conn->prepare($sql);
-  $stmt->bind_param("siisi", $nuevoNombre, $nuevoPrecio, $nuevoStock, $nuevaImagen, $id);
+  $stmt->bind_param("ssiisi", $nuevoNombre, $nuevaCategoria, $nuevoPrecio, $nuevoStock, $nuevaImagen, $id);
 
   if($stmt ->execute()) {
     Header('Location: ../admin-panel.php');
