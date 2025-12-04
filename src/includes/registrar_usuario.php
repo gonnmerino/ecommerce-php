@@ -1,6 +1,8 @@
 <?php
-require_once 'conexion.php';
+require_once __DIR__ . '/../../config.php';
+require_once INCLUDES_PATH . 'conexion.php';
 
+require_once BASE_PATH . '/cuenta.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
@@ -19,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($password)) {
         echo "<script>
                 alert('La contraseña no puede estar vacía');
-                window.location = '../cuenta.php';
+                window.location = '" . BASE_URL . "cuenta.php';
               </script>";
         exit();
     }
@@ -30,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo 'Todo correcto';
         if ($conn->query($sql) === TRUE) {
             echo ' Cuenta creada!';
-            Header('Location: ../cuenta.php');
+            Header('Location:' . BASE_URL . 'cuenta.php');
             exit();
         } else {
             echo 'Error al crear la cuenta' . $sql . $conn->error;

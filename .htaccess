@@ -1,0 +1,5 @@
+ErrorDocument 404 /404.php
+Options -Indexes
+Order allow,deny
+Allow from all
+Require all granted

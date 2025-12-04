@@ -50,7 +50,7 @@
                 repeatPasswordInput.removeAttribute('required');
                 termsCheckBox.removeAttribute('required');
 
-                form.action = 'includes/login_usuario.php';
+                form.action = 'src/includes/login_usuario.php';
         
             } else {
                 submitBtn.textContent = 'Crear cuenta';
@@ -63,7 +63,7 @@
                 repeatPasswordInput.setAttribute('required', 'required');
                 termsCheckBox.setAttribute('required', 'required');
 
-                form.action = 'includes/registrar_usuario.php';
+                form.action = 'src/includes/login_usuario.php';
             }
         }
         toggleMode();

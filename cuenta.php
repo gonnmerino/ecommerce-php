@@ -1,11 +1,11 @@
-<?php include 'includes/header.php' ?>
+<?php include './src/includes/header.php' ?>
 
 <body>
     <div class="min-h-screen bg-[#fffefe]">
     <?php
-        include 'includes/nav.php';
-        include 'includes/formulario.php';
+        include './src/includes/nav.php';
+        include './src/includes/formulario.php';
     ?>
     </div>
 </body>
-<?php include 'includes/footer.php' ?>
+<?php include './src/includes/footer.php' ?>

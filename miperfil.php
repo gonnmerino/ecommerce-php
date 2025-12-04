@@ -1,11 +1,12 @@
 <?php
-require_once('includes/session.php');
-require_once('includes/header.php');
-include('includes/conexion.php');
+require_once __DIR__ . '/config.php';
+require_once INCLUDES_PATH . 'session.php';
+require_once INCLUDES_PATH . 'header.php';
+require_once INCLUDES_PATH . 'conexion.php';
 
 // Si no está logueado, redirigir a cuenta.php
 if (!isset($_SESSION['user'])) {
-    header('Location: cuenta.php');
+    header('Location:' . BASE_URL . 'cuenta.php');
     exit();
 }
 
@@ -18,8 +19,8 @@ $user = $result->fetch_assoc();
 ?>
 <body>
     <div class="min-h-screen bg-[#fffefe]">
-        <?php include 'includes/nav.php'?>
-        <form action="includes/logout.php" method="POST">
+        <?php include INCLUDES_PATH . 'nav.php'?>
+        <form action="<?php echo BASE_URL; ?>logout.php" method="POST">
             <button type="submit" class="text-green-300 cursor-pointer hover:text-blue-300">
                 Cerrar Sesión
             </button>

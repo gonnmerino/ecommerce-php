@@ -1,15 +1,16 @@
 <?php
-require_once("session.php");
-require("conexion.php");
+require_once __DIR__ . '/../../config.php';
+require_once INCLUDES_PATH . 'session.php';
+require_once INCLUDES_PATH . 'conexion.php';
 
 $user_display = "";
-$profile_link = "../cuenta.php";
+$profile_link = BASE_URL . "cuenta.php";
 $estaLogueado = isset($_SESSION['user']);
 $esAdmin = isset($admin) && $admin == 1;
 
 if (isset($_SESSION['user'])) {
   $user_display = $_SESSION['user'];
-  $profile_link = "miperfil.php";
+  $profile_link = BASE_URL . "miperfil.php";
 }
 
 $stmt = $conn->prepare("SELECT id, nombre FROM categorias WHERE mostrar_en_nav = 1");
@@ -21,9 +22,9 @@ $stmt_sub = $conn->prepare("SELECT id, nombre, categoria_padre_id FROM categoria
 $stmt_sub->execute();
 $result_sub = $stmt_sub->get_result();
 
-  while ($subcat = $result_sub->fetch_assoc()) {
-      $subcategorias[$subcat['categoria_padre_id']][] = $subcat;
-  }
+while ($subcat = $result_sub->fetch_assoc()) {
+  $subcategorias[$subcat['categoria_padre_id']][] = $subcat;
+}
 $categorias->data_seek(0);
 ?>
 
@@ -37,7 +38,7 @@ $categorias->data_seek(0);
     <div class="w-full mx-auto flex items-center justify-between hidden lg:flex">
 
       <div class="flex-shrink-0 w-1/5 flex items-center">
-        <a href="index.php" class="flex-shrink-0">
+        <a href="<?php echo BASE_URL; ?>index.php" class="flex-shrink-0">
           <h1 class="font-bold text-2xl text-white tracking-widest hover:text-gray-300">
             ECO
           </h1>
@@ -57,28 +58,31 @@ $categorias->data_seek(0);
 
       <div class="flex items-center justify-end gap-4 flex-shrink-0 w-1/4">
 
-        <?php if ($estaLogueado): ?>
-          <div class="hidden xl:flex flex-col items-end text-right text-xs leading-none justify-center">
-            <span class="text-gray-400">Bienvenido</span>
-            <a href="<?php echo $profile_link; ?>" class="text-white font-medium hover:text-gray-300 transition-colors duration-200 whitespace-nowrap">
-              <?php echo htmlspecialchars($user_display); ?>
-            </a>
-          </div>
-        <?php endif; ?>
-
+        <div class="flex items-center justify-end flex-shrink-0">
+          <?php if ($estaLogueado): ?>
+            <div class="hidden -mt-1 xl:flex flex-col items-end text-right text-xs leading-none justify-center">
+              <a class="text-gray-400" href="<?php echo $profile_link; ?>">Bienvenido</a>
+              <a href="<?php echo $profile_link; ?>" class="text-white font-medium hover:text-gray-300 transition-colors duration-200 whitespace-nowrap">
+                <?php echo htmlspecialchars($user_display); ?>
+              </a>
+            </div>
+          <?php endif; ?>
+          <a href="<?php echo $profile_link; ?>" class="text-white hover:text-gray-300 transition-colors duration-200 p-1 hidden lg:block">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </a>
+        </div>
         <a href="#" class="text-white hover:text-gray-300 transition-colors duration-200 p-1">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
         </a>
 
-        <a href="<?php echo $profile_link; ?>" class="text-white hover:text-gray-300 transition-colors duration-200 p-1 hidden lg:block">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-        </a>
+
         <?php if ($esAdmin): ?>
-          <a href="../admin-panel.php" class="hidden lg:block text-white bg-red-600 hover:bg-red-700 text-xs font-bold py-1 px-3 rounded-full transition-colors duration-200">
+          <a href="<?php echo ADMIN_URL . 'admin-panel.php'; ?>"
+            class="hidden lg:block text-white bg-red-600 hover:bg-red-700 text-xs ml-1 font-bold py-1 px-3 rounded-full transition-colors duration-200">
             ADMIN
           </a>
         <?php endif; ?>
@@ -86,7 +90,7 @@ $categorias->data_seek(0);
     </div>
 
     <div class="w-full flex items-center justify-between lg:hidden">
-      <a href="index.php" class="flex-shrink-0">
+      <a href="<?php echo BASE_URL . 'index.php'; ?>" class="flex-shrink-0">
         <h1 class="font-bold text-2xl text-white tracking-widest">ECO</h1>
       </a>
 
@@ -112,53 +116,53 @@ $categorias->data_seek(0);
   </div>
 </nav>
 
-<div class="w-full mb-6 bg-black bg-opacity-90 backdrop-filter backdrop-blur-md hidden lg:block px-4 py-1.5 border-t border-gray-800">
+<div class="w-full bg-black bg-opacity-90 backdrop-filter backdrop-blur-md hidden lg:block px-4 py-1.5 border-t border-gray-800">
   <div class="flex gap-8 text-sm text-gray-400 max-w-7xl mx-auto justify-center">
-    <ul class="flex gap-8 font-normal items-center antialiased">
-    
-        <!-- TODO SI CLICKEAS "COMPONENTES" DEBERIA DE MOSTRAR TODOS LOS PRODUCTOS DE SUS SUB-CATEGORIAS PERO MUESTRA PAGINA EN BLANCO -->
+    <ul class="flex gap-30 font-normal items-center antialiased">
 
-    <?php while ($cat = $categorias->fetch_assoc()) { 
+      <!-- TODO - SI CLICKEAS "COMPONENTES" DEBERIA DE MOSTRAR TODOS LOS PRODUCTOS DE SUS SUB-CATEGORIAS PERO MUESTRA PAGINA EN BLANCO -->
+
+      <?php while ($cat = $categorias->fetch_assoc()) {
         $tieneSubcategorias = isset($subcategorias[$cat['id']]) && !empty($subcategorias[$cat['id']]);
-    ?>
+      ?>
         <li class="relative group <?php echo $tieneSubcategorias ? 'dropdown-item' : ''; ?>">
-            <?php if ($tieneSubcategorias): ?>
-                <!--dropdown Template-->
-                <form method="POST" action="productos.php" style="display:inline;">
-                    <input type="hidden" name="cat" value="<?= $cat['id'] //MENU NAV NORML  ?>">
-                    <button class="hover:text-white transition-colors duration-200 py-2 inline-block "
-                            style="background:none;border:none;color:inherit;cursor:pointer;font:inherit;">
-                        <?= htmlspecialchars($cat['nombre']) ?>
-                        <svg class="w-4 h-4 inline-block ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
+          <?php if ($tieneSubcategorias): ?>
+            <!--<form method="POST" action="productos.php" style="display:inline;"> // Esto seria la categoria por ejemlo "componentes" que no tiene productos entonces no envia el post y solo se maneja con sus subcategorias-->
+            <input type="hidden" name="cat" value="<?= $cat['id'] //MENU NAV NORML?>">
+            <button class="hover:text-white transition-colors duration-200 py-2 inline-block "
+              style="background:none;border:none;color:inherit;cursor:pointer;font:inherit;">
+              <?= htmlspecialchars($cat['nombre']) ?>
+              <svg class="w-4 h-4 inline-block ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            <!--</form>-->
+
+            <div class="absolute top-full left-0 mt-2 w-48 bg-[#010001] rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 ">
+              <div class="py-2">
+                <?php foreach ($subcategorias[$cat['id']] as $subcat): // SI TIENE SUBCATGORIA -> 
+                ?>
+                  <form method="POST" action="/productos.php" style="display:block;">
+                    <input type="hidden" name="cat" value="<?= $subcat['id'] ?>">
+                    <button class="w-full text-left px-4 py-2 text-sm text-gray-300  hover:text-red-400 transition-colors duration-150"
+                      style="background:none;border:none;cursor:pointer;font:inherit;">
+                      <?= htmlspecialchars($subcat['nombre']) ?>
                     </button>
-                </form>
-                
-                <div class="absolute top-full left-0 mt-2 w-48 bg-[#010001] rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 ">
-                    <div class="py-2">
-                        <?php foreach ($subcategorias[$cat['id']] as $subcat): // SI TIENE SUBCATGORIA -> ?>
-                            <form method="POST" action="productos.php" style="display:block;">
-                                <input type="hidden" name="cat" value="<?= $subcat['id'] ?>">
-                                <button class="w-full text-left px-4 py-2 text-sm text-gray-300  hover:text-white transition-colors duration-150"
-                                        style="background:none;border:none;cursor:pointer;font:inherit;">
-                                    <?= htmlspecialchars($subcat['nombre']) ?>
-                                </button>
-                            </form>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-            <?php else: ?>
-                <form method="POST" action="productos.php" style="display:inline;">
-                    <input type="hidden" name="cat" value="<?= $cat['id'] ?>">
-                    <button class="hover:text-white transition-colors duration-200"
-                            style="background:none;border:none;color:inherit;cursor:pointer;">
-                        <?= htmlspecialchars($cat['nombre']) ?>
-                    </button>
-                </form>
-            <?php endif; ?>
+                  </form>
+                <?php endforeach; ?>
+              </div>
+            </div>
+          <?php else: ?>
+            <form method="POST" action="/productos.php" style="display:inline;">
+              <input type="hidden" name="cat" value="<?= $cat['id'] ?>">
+              <button class="hover:text-white transition-colors duration-200"
+                style="background:none;border:none;color:inherit;cursor:pointer;">
+                <?= htmlspecialchars($cat['nombre']) ?>
+              </button>
+            </form>
+          <?php endif; ?>
         </li>
-    <?php } ?>
+      <?php } ?>
 
     </ul>
   </div>
@@ -185,59 +189,61 @@ $categorias->data_seek(0);
     <?php if ($estaLogueado): ?>
       <li class="mb-4 border-b border-gray-700 pb-4">
         <span class="text-gray-400 text-base">Sesión iniciada como:</span>
-        <a href="miperfil.php" class="block text-xl font-bold text-white hover:text-gray-300 transition-colors duration-200">
+        <a href="<?php echo BASE_URL . 'miperfil.php' ?>" class="block text-xl font-bold text-white hover:text-gray-300 transition-colors duration-200">
           <?php echo htmlspecialchars($user_display); ?>
         </a>
       </li>
     <?php else: ?>
       <li class="mb-4 border-b border-gray-700 pb-4">
-        <a href="cuenta.php" class="block py-2 hover:text-gray-300 transition-colors duration-200">Iniciar Sesión / Cuenta</a>
+        <a href="<?php echo BASE_URL . 'cuenta.php' ?>" class="block py-2 hover:text-gray-300 transition-colors duration-200">Iniciar Sesión / Cuenta</a>
       </li>
     <?php endif; ?>
 
     <?php if ($esAdmin): ?>
       <li class="mb-4">
-        <a href="admin-panel.php" class="block py-2 text-red-400 hover:text-red-300 transition-colors duration-200 border border-red-400 rounded-lg text-center font-bold">
+        <a href="<?php echo ADMIN_URL . 'admin-panel.php' ?>" class="block py-2 text-red-400 hover:text-red-300 transition-colors duration-200 border border-red-400 rounded-lg text-center font-bold">
           Panel de Administración
         </a>
       </li>
     <?php endif; ?>
 
     <li class="border-t border-gray-700 mt-4 pt-4"></li>
-    
+
     <?php // MOBILE MENU BOTONES
     $categorias->data_seek(0);
-    while ($cat = $categorias->fetch_assoc()) { 
-        $tieneSubcategorias = isset($subcategorias[$cat['id']]) && !empty($subcategorias[$cat['id']]);
+    while ($cat = $categorias->fetch_assoc()) {
+      $tieneSubcategorias = isset($subcategorias[$cat['id']]) && !empty($subcategorias[$cat['id']]);
     ?>
-        <li class="border-b border-gray-700 pb-2">
-            <form method="POST" action="productos.php">
-                <input type="hidden" name="cat" value="<?= $cat['id'] ?>">
-                <button class="block py-2 hover:text-gray-300 transition-colors duration-200 text-lg font-semibold w-full text-left"
-                        style="background:none;border:none;color:inherit;cursor:pointer;">
-                    <?= htmlspecialchars($cat['nombre']) // MENU NAV NORMAL MOBILE ?>
-                    <?php if ($tieneSubcategorias): ?>
-                        <span class="text-gray-400 text-sm ml-2">▼</span>
-                    <?php endif; ?>
-                </button>
-            </form>
-            
-            <?php if ($tieneSubcategorias): // SI TIENE SUBCATGORIA -> MOIBLE?>
-                <ul class="ml-4 mt-2 space-y-1 pb-2">
-                    <?php foreach ($subcategorias[$cat['id']] as $subcat): ?>
-                        <li>
-                            <form method="POST" action="productos.php">
-                                <input type="hidden" name="cat" value="<?= $subcat['id'] ?>">
-                                <button class="block py-1 text-gray-400 hover:text-white transition-colors duration-200 text-sm w-full text-left"
-                                        style="background:none;border:none;color:inherit;cursor:pointer;">
-                                    <?= htmlspecialchars($subcat['nombre']) ?>
-                                </button>
-                            </form>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
+      <li class="border-b border-gray-700 pb-2">
+        <form method="POST" action="/productos.php">
+          <input type="hidden" name="cat" value="<?= $cat['id'] ?>">
+          <button class="block py-2 hover:text-gray-300 transition-colors duration-200 text-lg font-semibold w-full text-left"
+            style="background:none;border:none;color:inherit;cursor:pointer;">
+            <?= htmlspecialchars($cat['nombre']) // MENU NAV NORMAL MOBILE 
+            ?>
+            <?php if ($tieneSubcategorias): ?>
+              <span class="text-gray-400 text-sm ml-2">▼</span>
             <?php endif; ?>
-        </li>
+          </button>
+        </form>
+
+        <?php if ($tieneSubcategorias): // SI TIENE SUBCATGORIA -> MOIBLE
+        ?>
+          <ul class="ml-4 mt-2 space-y-1 pb-2">
+            <?php foreach ($subcategorias[$cat['id']] as $subcat): ?>
+              <li>
+                <form method="POST" action="/productos.php">
+                  <input type="hidden" name="cat" value="<?= $subcat['id'] ?>">
+                  <button class="block py-1 text-gray-400 hover:text-white transition-colors duration-200 text-sm w-full text-left"
+                    style="background:none;border:none;color:inherit;cursor:pointer;">
+                    <?= htmlspecialchars($subcat['nombre']) ?>
+                  </button>
+                </form>
+              </li>
+            <?php endforeach; ?>
+          </ul>
+        <?php endif; ?>
+      </li>
     <?php } ?>
   </ul>
 </div>
