@@ -12,7 +12,6 @@ if (!isset($_SESSION['user'])) {
 
 $email = $_SESSION['user'];
 
-// Obtener datos del usuario si necesitas más información
 $sql = "SELECT * FROM usuarios WHERE email = '$email'";
 $result = $conn->query($sql);
 $user = $result->fetch_assoc();

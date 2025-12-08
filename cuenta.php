@@ -1,11 +1,13 @@
-<?php include './src/includes/header.php' ?>
+<?php 
+require_once __DIR__ . '/config.php';
+require_once INCLUDES_PATH . 'header.php';
+?>
 
 <body>
     <div class="min-h-screen bg-[#fffefe]">
     <?php
-        include './src/includes/nav.php';
-        include './src/includes/formulario.php';
+        include INCLUDES_PATH . 'nav.php';
+        include INCLUDES_PATH . 'formulario.php';
     ?>
     </div>
 </body>
-<?php include './src/includes/footer.php' ?>

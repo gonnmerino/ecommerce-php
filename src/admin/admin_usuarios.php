@@ -29,7 +29,7 @@
             $tipo_usuario = $row['admin'] == 1 ? 'Admin' : 'Usuario';
             $tipo_class = $row['admin'] == 1 ? 'bg-red-600 text-white' : 'bg-blue-100 text-blue-800';
 
-            $estado_cuenta = $row['activo'] == 1 ? 'Activa' : 'Desactivada';
+            $estado_cuenta = $row['activo'] == 1 ? 'Activa' : 'Inactiva';
             $estado_class = $row['activo'] == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
 
             echo "
@@ -57,7 +57,10 @@
                 </span>
               </td>
               <td class='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
-                <div class='flex flex-row'>
+                <div class='flex gap-5 flex-row'>
+                  <button class='text-gray-600 cursor-pointer hover:text-gray-900 mr-4'>
+                    Editar
+                  </Button>
                   <form method='POST' action='" . ADMIN_URL . "desactivar_cuenta.php'>
                     <input type='hidden' name='toggle_id' value='" . $row['id'] . "'>
                     

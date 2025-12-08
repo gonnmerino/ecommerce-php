@@ -19,6 +19,18 @@
       document.getElementById('stockModalBackdrop').classList.add('hidden');
       document.getElementById('stockModalContent').classList.add('hidden');
     }
+    function openPagConfig(button) {
+      const btnPagConfig = document.getElementById('pag-config-btn');
+      const pagNumberCfg = button.getAttribute('PagcfgDATA')
+      document.getElementById('editPag-config').value = pagNumberCfg;
+      document.getElementById('pagModalBackdrop').classList.remove('hidden');
+      document.getElementById('pagModalContent').classList.remove('hidden');
+      document.getElementById('editPag-config').focus();
+    }
+    function closePagModalEdit() {
+      document.getElementById('pagModalBackdrop').classList.add('hidden');
+      document.getElementById('pagModalContent').classList.add('hidden');
+    }
     function openModalEdit(button) {
       document.getElementById("editProductoForm").action = "actualizar_producto.php";
       document.getElementById('tituloModal').textContent = "Edita un producto"
@@ -49,6 +61,13 @@
     function showSection(section) {
       document.getElementById('products-section').classList.add('hidden');
       document.getElementById('users-section').classList.add('hidden');
+      const paginacion = document.getElementById("paginado-productos");
+
+      if(section == "products") {
+        paginacion.classList.remove('hidden');
+      } else if("users"){
+        paginacion.classList.add('hidden');
+      }
 
       document.getElementById('products-tab').classList.remove('border-black', 'text-gray-900');
       document.getElementById('products-tab').classList.add('border-transparent', 'text-gray-500');
