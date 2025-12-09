@@ -152,7 +152,7 @@ if(!empty($busquedaUsuario) && $busquedaUsuario != ' ') {
 
       <div class="fixed inset-0 bg-black opacity-50 z-40 hidden" id="stockModalBackdrop"></div>
       <div class="fixed inset-0 flex items-center justify-center hidden z-50" id="stockModalContent">
-        <div class="bg-white w-75 p-6 rounded-sm shadow-lg max-w-lg mx-4 border border-gray-300">
+        <div class="bg-white w-75 p-6 rounded-lg shadow-lg max-w-lg mx-4 border border-gray-300">
           <form method="POST" action="actualizar_stock_config.php">
             <h3 class="text-lg font-bold mb-4 text-gray-900">Configuracion</h3>
             <div>
@@ -209,7 +209,7 @@ if(!empty($busquedaUsuario) && $busquedaUsuario != ' ') {
         <!-- MODEL PAGINADO -->
       <div class="fixed inset-0 bg-black opacity-50 z-40 hidden" id="pagModalBackdrop"></div>
       <div class="fixed inset-0 flex items-center justify-center hidden z-50" id="pagModalContent">
-        <div class="bg-white w-80 p-6 rounded-sm shadow-lg max-w-lg mx-4 border border-gray-300">
+        <div class="bg-white w-80 p-6 rounded-lg shadow-lg max-w-lg mx-4 border border-gray-300">
           <form method="POST" action="actualizar_paginado_config.php">
             <h3 class="text-lg font-bold mb-4 text-gray-900">Configuracion</h3>
             <div>

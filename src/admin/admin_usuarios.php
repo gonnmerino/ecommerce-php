@@ -1,6 +1,6 @@
 <?php
-  $sql_usuarios = "SELECT id, email, activo, admin FROM usuarios";
-  $result_usuarios = $conn->query($sql_usuarios);
+$sql_usuarios = "SELECT id, email, activo, admin FROM usuarios";
+$result_usuarios = $conn->query($sql_usuarios);
 ?>
 <div id="users-section" class="hidden">
   <div class="mb-6">
@@ -58,14 +58,14 @@
               </td>
               <td class='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
                 <div class='flex gap-5 flex-row'>
-                  <button class='text-gray-600 cursor-pointer hover:text-gray-900 mr-4'>
+                  <button onclick='openUsuarioConfig(this)' data-id-rol='" . $row['id'] . "' class='text-gray-600 cursor-pointer hover:text-gray-900 mr-4'>
                     Editar
                   </Button>
                   <form method='POST' action='" . ADMIN_URL . "desactivar_cuenta.php'>
                     <input type='hidden' name='toggle_id' value='" . $row['id'] . "'>
                     
-                    <button class='user-decoration:none cursor-pointer " . 
-                            ($row['activo'] == 1 ? "text-red-600 hover:text-red-400" : "text-green-600 hover:text-green-400") .  "'> 
+                    <button class='user-decoration:none cursor-pointer " .
+              ($row['activo'] == 1 ? "text-red-600 hover:text-red-400" : "text-green-600 hover:text-green-400") .  "'> 
                       " . ($row['activo'] == 1 ? "Desactivar" : "Activar") . "
                     </button>
                     
@@ -87,6 +87,31 @@
         ?>
       </tbody>
     </table>
+
+    <div class="fixed inset-0 bg-black opacity-50 z-40 hidden" id="usuarioModalBackdrop"></div>
+    <div class="fixed inset-0 flex items-center justify-center hidden z-50" id="usuarioModalContent">
+      <div class="bg-white w-75 p-6 rounded-lg shadow-lg max-w-lg mx-4 border border-gray-300">
+        <form method="POST" action="actualizar_rol.php">
+          <input type="hidden" name="usuario_id" id="usuario_id_input">
+          <h3 class="text-lg font-bold mb-4 ml-1 text-gray-900">Cambio de rol</h3>
+          <div>
+            <label class="block text-sm font-medium ml-1 text-gray-700 mb-1">Asiga un rol a este usuario</label>
+            <select name="rolSeleccion" id="editCategoria" class="w-full border cursor-pointer border-gray-300 px-3 py-2 rounded-lg" required>
+            <option class="cursor-pointer" value="rolUsuario">Usuario</option>
+            <option class="cursor-pointer" value="rolAdmin">Admin</option>
+            </select>
+          </div>
+          <div class="flex justify-end space-x-3 mt-4">
+            <button type="button" onclick="closeUsuarioModalEdit()" class="px-4 py-2 border border-gray-300 rounded-sm cursor-pointer hover:bg-gray-200">
+              Cancelar
+            </button>
+            <button type="submit" id="usuario-guardar-btn" class="px-4 py-2 bg-black text-white rounded-sm cursor-pointer hover:bg-gray-800">
+              Guardar cambios
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="admin-scripts.js"></script>
   </div>
 </div>
-

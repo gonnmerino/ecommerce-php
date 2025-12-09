@@ -57,6 +57,16 @@
       document.getElementById('modalBackdrop').classList.add('hidden');
       document.getElementById('modalContent').classList.add('hidden');
     }
+    function openUsuarioConfig(button) {
+      const usuarioid = button.getAttribute('data-id-rol');
+      document.getElementById('usuario_id_input').value = usuarioid;
+      document.getElementById('usuarioModalBackdrop').classList.remove('hidden');
+      document.getElementById('usuarioModalContent').classList.remove('hidden');
+    }
+    function closeUsuarioModalEdit() {
+      document.getElementById('usuarioModalBackdrop').classList.add('hidden');
+      document.getElementById('usuarioModalContent').classList.add('hidden');
+    }
 
     function showSection(section) {
       document.getElementById('products-section').classList.add('hidden');

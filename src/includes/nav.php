@@ -38,7 +38,7 @@ $categorias->data_seek(0);
       <div class="flex-shrink-0 w-1/5 flex items-center">
         <a href="<?php echo BASE_URL; ?>index.php" class="flex-shrink-0">
           <h1 class="font-bold text-2xl text-white tracking-widest hover:text-gray-300">
-            Eco
+            ECO
           </h1>
         </a>
       </div>
