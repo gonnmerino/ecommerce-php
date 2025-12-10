@@ -49,9 +49,10 @@
             $ <?php echo number_format($precio, 2); ?>
         </p>
         
-        <button class="group cursor-pointer relative inline-flex h-12 items-center justify-center 
+        <button onclick="agregar_carrito_btn(this)" title="Aun no disponible, estamos trabajando en esto." class="group cursor-pointer relative inline-flex h-12 items-center justify-center 
                       overflow-hidden rounded-md bg-yellow-400 px-6 font-medium text-gray-900 
                       w-full mt-4 transition hover:scale-105">
+
             <span>Agregar al carrito</span>
             <div class="absolute inset-0 flex h-full w-full justify-center 
                         [transform:skew(-12deg)_translateX(-100%)] 
@@ -62,3 +63,8 @@
         </button>
     </div>
 </div>
+<script>
+  function agregar_carrito_btn(button) {
+    alert('Aun no disponible, ¡Estamos trabajando en esto!');
+  }
+</script>

@@ -65,7 +65,7 @@ require_once INCLUDES_PATH . 'conexion.php';
 <body class="bg-white">
   <div class="min-h-screen">
     <?php include INCLUDES_PATH . 'nav.php'; ?>
-    <div class="p-6 mx-65">
+    <div class="p-6 mx-55">
       <div class="mb-8">
         <h1 class="text-2xl font-semibold text-gray-900">Admin Panel</h1>
         <p class="text-gray-600 mt-1">Panel de administracion de cuentas, pruductos y su stock.</p>
