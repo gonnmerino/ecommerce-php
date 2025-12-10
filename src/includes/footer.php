@@ -5,7 +5,10 @@ require_once __DIR__ . '/../../config.php';
   <div class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
 
     <div>
-      <h2 class="text-xl font-semibold text-white tracking-wide">Eco</h2>
+      <div class="flex flex-row">
+        <img class="max-w-6 max-h-5 my-auto mr-1" src="favicon.png">
+        <h2 class="text-xl font-semibold text-white tracking-wide">ECOMMERCE</h2>
+      </div>
       <p class="mt-4 text-sm text-neutral-400">
         Componentes de PC de alta calidad. Rendimiento, innovación y confianza en cada compra.
       </p>
@@ -44,7 +47,7 @@ require_once __DIR__ . '/../../config.php';
 
   <div class="border-t border-neutral-800">
     <div class="max-w-7xl mx-auto px-6 py-6 flex flex-col sm:flex-row justify-between text-sm text-neutral-500">
-      <p>© 2025 Eco — Todos los derechos reservados</p>
+      <p>© 2025 ECOMMERCE — Todos los derechos reservados</p>
       <div class="flex space-x-6 mt-4 sm:mt-0">
         <a href="#" class="hover:text-white transition">Privacidad</a>
         <a href="#" class="hover:text-white transition">Términos</a>

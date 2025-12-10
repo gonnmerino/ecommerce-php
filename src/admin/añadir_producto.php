@@ -3,6 +3,7 @@ require_once __DIR__ . '/../../config.php';
 require_once INCLUDES_PATH . 'session.php';
 require_once INCLUDES_PATH . 'conexion.php';
 require_once INCLUDES_PATH . 'manejar_imagen.php';
+
   if (!isset($_SESSION['admin']) || $_SESSION['admin'] != 1) {
       die('errror');
   }

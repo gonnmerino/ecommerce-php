@@ -4,61 +4,61 @@ require_once INCLUDES_PATH . 'session.php';
 require_once INCLUDES_PATH . 'header.php';
 require_once INCLUDES_PATH . 'conexion.php';
 
-if (!isset($admin) || $admin != 1) {
-  Header('Location:' . BASE_URL . 'index.php');
-  exit;
-}
+  if (!isset($admin) || $admin != 1) {
+    Header('Location:' . BASE_URL . 'index.php');
+    exit;
+  } 
 
-$sql_stockConfig = "SELECT stock_bajo_numero FROM cfg_panel";
-$result_config = $conn->query($sql_stockConfig);
-$rown = $result_config->fetch_assoc();
-$stockNumberConfig = $rown['stock_bajo_numero'];
-//echo $stockNumberConfig;
-$total = $conn->query("SELECT COUNT(*) AS total FROM productos")->fetch_assoc()['total'];
+  $sql_stockConfig = "SELECT stock_bajo_numero FROM cfg_panel";
+  $result_config = $conn->query($sql_stockConfig);
+  $rown = $result_config->fetch_assoc();
+  $stockNumberConfig = $rown['stock_bajo_numero'];
+  //echo $stockNumberConfig;
+  $total = $conn->query("SELECT COUNT(*) AS total FROM productos")->fetch_assoc()['total'];
 
-$sql_pagConfig = "SELECT por_pagina FROM cfg_panel";
-$result_config = $conn->query($sql_pagConfig);
-$rown = $result_config->fetch_assoc();
-$por_pagina = $rown['por_pagina'];
+  $sql_pagConfig = "SELECT por_pagina FROM cfg_panel";
+  $result_config = $conn->query($sql_pagConfig);
+  $rown = $result_config->fetch_assoc();
+  $por_pagina = $rown['por_pagina'];
 
-$pagina_actual = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+  $pagina_actual = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 
-$offset = ($pagina_actual - 1) * $por_pagina;
+  $offset = ($pagina_actual - 1) * $por_pagina;
 
-$total_paginas = ceil($total / $por_pagina);
+  $total_paginas = ceil($total / $por_pagina);
 
 
-$sql_productos = "SELECT p.id, p.nombre, p.descripcion, p.precio, p.stock, p.activo, p.sku, p.imagen, p.categoria_id, p.fecha_creacion, c.nombre as categoria_nombre 
-FROM productos p LEFT JOIN categorias c ON p.categoria_id = c.id ORDER BY CASE WHEN p.activo = 1 THEN 0 else 1 END, p.id DESC LIMIT $por_pagina OFFSET $offset";
-//$result_productos = $conn->query($sql_productos);
-$productos = $conn->query($sql_productos);
-$sql_contadores = " SELECT SUM(CASE WHEN activo = 1 THEN 1 ELSE 0 END) AS activos,SUM(CASE WHEN activo = 0 THEN 1 ELSE 0 END) AS inactivos,  SUM(CASE WHEN stock < $stockNumberConfig AND stock > 0 THEN 1 ELSE 0 END) AS stock_bajo
-  FROM productos";
+  $sql_productos = "SELECT p.id, p.nombre, p.descripcion, p.precio, p.stock, p.activo, p.sku, p.imagen, p.categoria_id, p.fecha_creacion, c.nombre as categoria_nombre 
+  FROM productos p LEFT JOIN categorias c ON p.categoria_id = c.id ORDER BY CASE WHEN p.activo = 1 THEN 0 else 1 END, p.id DESC LIMIT $por_pagina OFFSET $offset";
+  //$result_productos = $conn->query($sql_productos);
+  $productos = $conn->query($sql_productos);
+  $sql_contadores = " SELECT SUM(CASE WHEN activo = 1 THEN 1 ELSE 0 END) AS activos,SUM(CASE WHEN activo = 0 THEN 1 ELSE 0 END) AS inactivos,  SUM(CASE WHEN stock < $stockNumberConfig AND stock > 0 THEN 1 ELSE 0 END) AS stock_bajo
+    FROM productos";
 
-$contadores = $conn->query($sql_contadores)->fetch_assoc();
+  $contadores = $conn->query($sql_contadores)->fetch_assoc();
 
-$activos = $contadores['activos'];
-$inactivos = $contadores['inactivos'];
-$stock_bajo = $contadores['stock_bajo'];
-//$sku = $contadores['sku'];
+  $activos = $contadores['activos'];
+  $inactivos = $contadores['inactivos'];
+  $stock_bajo = $contadores['stock_bajo'];
+  //$sku = $contadores['sku'];
 
-//busqueda-productos
-$busquedaUsuario = isset($_GET['busqueda-productos-admin']) ? $_GET['busqueda-productos-admin'] : '';
+  //busqueda-productos
+  $busquedaUsuario = isset($_GET['busqueda-productos-admin']) ? $_GET['busqueda-productos-admin'] : '';
 
-if(!empty($busquedaUsuario) && $busquedaUsuario != ' ') {
-  $stmt3 = $conn->prepare("SELECT p.id, p.nombre, p.descripcion, p.precio, p.stock, p.activo, p.sku, p.imagen, p.categoria_id, c.nombre as categoria_nombre 
-  FROM productos p  LEFT JOIN categorias c ON p.categoria_id = c.id WHERE p.nombre LIKE ? OR p.descripcion LIKE ? OR p.sku LIKE ?");
+  if(!empty($busquedaUsuario) && $busquedaUsuario != ' ') {
+    $stmt3 = $conn->prepare("SELECT p.id, p.nombre, p.descripcion, p.precio, p.stock, p.activo, p.sku, p.imagen, p.categoria_id, c.nombre as categoria_nombre 
+    FROM productos p  LEFT JOIN categorias c ON p.categoria_id = c.id WHERE p.nombre LIKE ? OR p.descripcion LIKE ? OR p.sku LIKE ?");
 
-  $busqueda_param = "%" . $busquedaUsuario . "%";
+    $busqueda_param = "%" . $busquedaUsuario . "%";
 
-  $stmt3->bind_param("sss", $busqueda_param, $busqueda_param, $busqueda_param);
-  $stmt3->execute();
+    $stmt3->bind_param("sss", $busqueda_param, $busqueda_param, $busqueda_param);
+    $stmt3->execute();
 
-  $resultadoBusqueda = $stmt3->get_result();
-  
+    $resultadoBusqueda = $stmt3->get_result();
+    
 
-  $stmt3->close();
-}
+    $stmt3->close();
+  }
 
 ?>
 
@@ -206,7 +206,7 @@ if(!empty($busquedaUsuario) && $busquedaUsuario != ' ') {
             Añadir un producto
           </button>
         </div>
-        <!-- MODEL PAGINADO -->
+        <!-- MODEL PAGINADO CONFIGURACIONN -->
       <div class="fixed inset-0 bg-black opacity-50 z-40 hidden" id="pagModalBackdrop"></div>
       <div class="fixed inset-0 flex items-center justify-center hidden z-50" id="pagModalContent">
         <div class="bg-white w-80 p-6 rounded-lg shadow-lg max-w-lg mx-4 border border-gray-300">

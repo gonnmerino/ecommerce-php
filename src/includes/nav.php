@@ -46,10 +46,10 @@ if(!empty($busquedaProducto)) {
 
     <div class="w-full mx-auto flex items-center justify-between hidden lg:flex">
 
-      <div class="flex ml-auto xl:pr-30 items-center">
+      <div class="flex ml-auto xl:pr-10 items-center">
         <a href="<?php echo BASE_URL; ?>index.php" class="flex-shrink-0">
           <h1 class="font-bold text-2xl text-white tracking-widest hover:text-gray-300">
-            ECO
+            ECOMMERCE
           </h1>
         </a>
       </div>

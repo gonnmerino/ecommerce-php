@@ -22,70 +22,70 @@ require_once __DIR__ . '/../../config.php';
   $timestamp = time();
 ?>
 
-                    <tr class="<?php echo $activo_class; ?>">
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                          <div class="h-10 w-10 flex-shrink-0">
-                            <img class="h-10 w-10 rounded object-cover"
-                              src="../images/<?php echo htmlspecialchars($imagen_producto); ?>?v=<?php echo $timestamp; ?>"
-                              alt="<?php echo htmlspecialchars($nombre); ?>">
-                          </div>
-                          <div class="ml-4">
-                            <div class="text-sm font-medium text-gray-900">
-                              <?php echo htmlspecialchars($nombre); ?>
-                            </div>
-                            <div class="text-sm text-gray-500">
-                              <?php echo htmlspecialchars($categoria_nombre); ?>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <?php echo $descripcion_corta; ?>
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <?php echo htmlspecialchars($sku); ?>
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
-                        $<?php echo $precio_formateado; ?>
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900">
-                          <?php echo $stock; ?>
-                        </div>
-                        <?php echo $stock_bajo_html; ?>
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo $estado_class; ?>">
-                          <?php echo $estado; ?>
-                        </span>
-                      </td>
+<tr class="<?php echo $activo_class; ?>">
+  <td class="px-6 py-4 whitespace-nowrap">
+    <div class="flex items-center">
+      <div class="h-10 w-10 flex-shrink-0">
+        <img class="h-10 w-10 rounded object-cover"
+          src="../images/<?php echo htmlspecialchars($imagen_producto); ?>?v=<?php echo $timestamp; ?>"
+          alt="<?php echo htmlspecialchars($nombre); ?>">
+      </div>
+      <div class="ml-4">
+        <div class="text-sm font-medium text-gray-900">
+          <?php echo htmlspecialchars($nombre); ?>
+        </div>
+        <div class="text-sm text-gray-500">
+          <?php echo htmlspecialchars($categoria_nombre); ?>
+        </div>
+      </div>
+    </div>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+    <?php echo $descripcion_corta; ?>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+    <?php echo htmlspecialchars($sku); ?>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+    $<?php echo $precio_formateado; ?>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap">
+    <div class="text-sm text-gray-900">
+      <?php echo $stock; ?>
+    </div>
+    <?php echo $stock_bajo_html; ?>
+  </td>
+  <td class="px-6 py-4 whitespace-nowrap">
+    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo $estado_class; ?>">
+      <?php echo $estado; ?>
+    </span>
+  </td>
 
 
-                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div class="flex flex-row">
+  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+    <div class="flex flex-row">
 
-                          <button id="edit-btn" onclick="openModalEdit(this)"
+      <button id="edit-btn" onclick="openModalEdit(this)"
 
-                            data-id="<?php echo $id; ?>"
-                            data-nombre="<?php echo htmlspecialchars($nombre); ?>"
-                            data-descripcion="<?php echo htmlspecialchars($descripcion); ?>"
-                            data-categoria="<?php echo $categoria_id; ?>"
-                            data-precio="<?php echo $precio; ?>"
-                            data-stock="<?php echo $stock; ?>"
-                            data-imagen="<?php echo htmlspecialchars($imagen); ?>"
-                            class="text-gray-600 cursor-pointer hover:text-gray-900 mr-4">
-                            Editar
-                          </button>
-                          <form method="POST" action="<?php echo ADMIN_URL ?>deslistar.php">
+        data-id="<?php echo $id; ?>"
+        data-nombre="<?php echo htmlspecialchars($nombre); ?>"
+        data-descripcion="<?php echo htmlspecialchars($descripcion); ?>"
+        data-categoria="<?php echo $categoria_id; ?>"
+        data-precio="<?php echo $precio; ?>"
+        data-stock="<?php echo $stock; ?>"
+        data-imagen="<?php echo htmlspecialchars($imagen); ?>"
+        class="text-gray-600 cursor-pointer hover:text-gray-900 mr-4">
+        Editar
+      </button>
+      <form method="POST" action="<?php echo ADMIN_URL ?>deslistar.php">
 
-                            <input type="hidden" name="toggle_id" value="<?php echo $id; ?>">
+        <input type="hidden" name="toggle_id" value="<?php echo $id; ?>">
 
-                            <button class="user-decoration:none cursor-pointer <?php echo $toggle_class; ?>">
-                              <?php echo $toggle_text; ?>
-                            </button>
+        <button class="user-decoration:none cursor-pointer <?php echo $toggle_class; ?>">
+          <?php echo $toggle_text; ?>
+        </button>
 
-                          </form>
-                        </div>
-                      </td>
-                    </tr>
+      </form>
+    </div>
+  </td>
+</tr>

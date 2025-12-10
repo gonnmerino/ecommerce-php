@@ -1,24 +1,24 @@
 <?php
-if (isset($datos) && !empty($datos)) {
-    $producto = $datos;
-} elseif (isset($row) && !empty($row)) {
-    $producto = $row;
-} else {
-    return;
-}
-$id = $producto['id'] ?? 0;
-$nombre = $producto['nombre'] ?? '';
-$descripcion = $producto['descripcion'] ?? '';
-$precio = $producto['precio'] ?? 0;
-$stock = $producto['stock'] ?? 0;
-$activo = $producto['activo'] ?? 0;
-$sku = $producto['sku'] ?? '';
-$imagen = $producto['imagen'] ?? 'image-placeholder.jpg';
-$categoria_nombre = $producto['categoria_nombre'] ?? 'Sin categoría';
-$categoria_id = $producto['categoria_id'] ?? 0;
+  if (isset($datos) && !empty($datos)) {
+      $producto = $datos;
+  } elseif (isset($row) && !empty($row)) {
+      $producto = $row;
+  } else {
+      return;
+  }
+  $id = $producto['id'] ?? 0;
+  $nombre = $producto['nombre'] ?? '';
+  $descripcion = $producto['descripcion'] ?? '';
+  $precio = $producto['precio'] ?? 0;
+  $stock = $producto['stock'] ?? 0;
+  $activo = $producto['activo'] ?? 0;
+  $sku = $producto['sku'] ?? '';
+  $imagen = $producto['imagen'] ?? 'image-placeholder.jpg';
+  $categoria_nombre = $producto['categoria_nombre'] ?? 'Sin categoría';
+  $categoria_id = $producto['categoria_id'] ?? 0;
 
-$imagen_producto = isset($imagen_producto) ? $imagen_producto : (IMAGES_URL . $imagen);
-$descripcionLimitada = isset($descripcionLimitada) ? $descripcionLimitada : (strlen($descripcion) > 40 ? substr($descripcion, 0, 40) . '...' : $descripcion);
+  $imagen_producto = isset($imagen_producto) ? $imagen_producto : (IMAGES_URL . $imagen);
+  $descripcionLimitada = isset($descripcionLimitada) ? $descripcionLimitada : (strlen($descripcion) > 40 ? substr($descripcion, 0, 40) . '...' : $descripcion);
 ?>
 
 <div class="bg-neutral-900 border border-neutral-800 rounded-xl shadow-lg flex flex-col overflow-hidden hover:shadow-xl transition-shadow duration-300">
