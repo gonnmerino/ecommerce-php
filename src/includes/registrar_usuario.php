@@ -26,7 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
     if ($resultado->num_rows >= 1) {
-        echo 'Esta cuenta ya existe';
+      echo "<script>
+          alert('Esta cuenta ya existe');
+          window.location = '" . BASE_URL . "cuenta.php';
+        </script>";
+      exit();
     } else {
          $sql = "INSERT INTO usuarios(email, contraseña, activo, admin) VALUES ('$email', '$hashed_password', '$activo', $admin)";
         echo 'Todo correcto';

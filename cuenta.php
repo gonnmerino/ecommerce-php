@@ -4,7 +4,7 @@ require_once INCLUDES_PATH . 'header.php';
 ?>
 
 <body>
-    <div class="min-h-screen bg-[#fffefe]">
+    <div class="min-h-screen bg-black">
     <?php
         include INCLUDES_PATH . 'nav.php';
         include INCLUDES_PATH . 'formulario.php';

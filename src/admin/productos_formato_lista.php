@@ -1,25 +1,25 @@
 <?php
 require_once __DIR__ . '/../../config.php';
-$id = $datos['id'] ?? 0;
-$nombre = $datos['nombre'] ?? '';
-$descripcion = $datos['descripcion'] ?? '';
-$precio = $datos['precio'] ?? 0;
-$stock = $datos['stock'] ?? 0;
-$activo = $datos['activo'] ?? 0;
-$sku = $datos['sku'] ?? '';
-$imagen = $datos['imagen'] ?? 'image-placeholder.jpg';
-$categoria_nombre = $datos['categoria_nombre'] ?? 'Sin categoría';
-$categoria_id = $datos['categoria_id'] ?? 0;
-$activo_class = $activo == 0 ? "opacity-40" : "";
-$estado = $activo == 1 ? 'Activo' : 'Inactivo';
-$estado_class = $activo == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
-$precio_formateado = number_format($precio, 2, ',', '.');
-$imagen_producto = !empty($imagen) ? $imagen : 'image-placeholder.jpg';
-$descripcion_corta = htmlspecialchars(mb_strimwidth($descripcion, 0, 40, "..."));
-$stock_bajo_html = $stock <= $stockNumberConfig ? "<div class='text-xs text-yellow-600'>Stock bajo</div>" : "";
-$toggle_text = $activo == 1 ? "Deslistar" : "Activar";
-$toggle_class = $activo == 1 ? "text-red-600 hover:text-red-400" : "text-green-600 hover:text-green-400";
-$timestamp = time();
+  $id = $datos['id'] ?? 0;
+  $nombre = $datos['nombre'] ?? '';
+  $descripcion = $datos['descripcion'] ?? '';
+  $precio = $datos['precio'] ?? 0;
+  $stock = $datos['stock'] ?? 0;
+  $activo = $datos['activo'] ?? 0;
+  $sku = $datos['sku'] ?? '';
+  $imagen = $datos['imagen'] ?? 'image-placeholder.jpg';
+  $imagen_producto = !empty($imagen) ? $imagen : 'image-placeholder.jpg';
+  $categoria_nombre = $datos['categoria_nombre'] ?? 'Sin categoría';
+  $categoria_id = $datos['categoria_id'] ?? 0;
+  $activo_class = $activo == 0 ? "opacity-40" : "";
+  $estado = $activo == 1 ? 'Activo' : 'Inactivo';
+  $estado_class = $activo == 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+  $precio_formateado = number_format($precio, 2, ',', '.');
+  $descripcion_corta = htmlspecialchars(mb_strimwidth($descripcion, 0, 40, "..."));
+  $stock_bajo_html = $stock <= $stockNumberConfig ? "<div class='text-xs text-yellow-600'>Stock bajo</div>" : "";
+  $toggle_text = $activo == 1 ? "Deslistar" : "Activar";
+  $toggle_class = $activo == 1 ? "text-red-600 hover:text-red-400" : "text-green-600 hover:text-green-400";
+  $timestamp = time();
 ?>
 
                     <tr class="<?php echo $activo_class; ?>">

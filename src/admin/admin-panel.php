@@ -43,7 +43,7 @@ $stock_bajo = $contadores['stock_bajo'];
 //$sku = $contadores['sku'];
 
 //busqueda-productos
-$busquedaUsuario = isset($_GET['busqueda-productos']) ? $_GET['busqueda-productos'] : '';
+$busquedaUsuario = isset($_GET['busqueda-productos-admin']) ? $_GET['busqueda-productos-admin'] : '';
 
 if(!empty($busquedaUsuario) && $busquedaUsuario != ' ') {
   $stmt3 = $conn->prepare("SELECT p.id, p.nombre, p.descripcion, p.precio, p.stock, p.activo, p.sku, p.imagen, p.categoria_id, c.nombre as categoria_nombre 
@@ -189,7 +189,7 @@ if(!empty($busquedaUsuario) && $busquedaUsuario != ' ') {
           <div class="relative w-80">
             <form method="GET">
               <div class="flex flex-row gap-4">
-              <input type="text" name="busqueda-productos" placeholder="Buscar Productos..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black">
+              <input type="text" name="busqueda-productos-admin" placeholder="Buscar Productos..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black">
             </form>
 
               <a id="pag-cfg" onclick="openPagConfig(this)" class="cursor-pointer m-auto transition duration-150 active:scale-85" title="Cambiar la configuracion de paginado" >

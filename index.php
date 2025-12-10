@@ -1,22 +1,34 @@
-<?php include './src/includes/header.php'?>
 <?php
 require_once __DIR__ . '/config.php';
-require_once INCLUDES_PATH . 'header.php';
 require_once INCLUDES_PATH . 'conexion.php';
+require_once INCLUDES_PATH . 'header.php';
 include INCLUDES_PATH . 'nav.php';
 
-$sql = "SELECT id, nombre, descripcion, precio, imagen 
-        FROM productos 
-        WHERE activo = 1";
-$result = $conn->query($sql);
+  $por_pagina = 20;
+  $pagina_actual = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+  $offset = ($pagina_actual - 1) * $por_pagina;
+
+  $total_result = $conn->query("SELECT COUNT(*) AS total FROM productos WHERE activo = 1");
+  $total = $total_result->fetch_assoc()['total'];
+
+  $sql = 'SELECT p.id, p.nombre, p.descripcion, p.precio, p.imagen, p.stock, c.nombre AS categoria_nombre, c.id AS categoria_id  
+  FROM productos p INNER JOIN categorias c ON p.categoria_id = c.id WHERE p.activo = 1 ORDER BY p.id DESC LIMIT ? OFFSET ?';
+          
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param('ii', $por_pagina, $offset);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+  $total_paginas = ceil($total / $por_pagina);
 ?>
 
 <body>
 <div class="min-h-screen bg-[#0b0b0a]">
 
-    <div class="xl:mx-70 pt-3">
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6 p-4">
-
+    <div class="xl:mx-70 p-4">
+      <h2 class="text-white text-2xl md:text-3xl font-bold mb-6">Todos los productos</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6">
+          
         <?php
         if ($result && $result->num_rows > 0) {
 
@@ -29,40 +41,7 @@ $result = $conn->query($sql);
                 $descripcionLimitada = strlen($descripcion) > $max
                     ? substr($descripcion, 0, $max) . '...'
                     : $descripcion;
-                echo '
-                <div class="bg-neutral-900 border border-neutral-800 rounded-xl shadow-lg flex flex-col overflow-hidden">
-
-                    <div class="w-full h-80 overflow-hidden">
-                        <img src="' . htmlspecialchars($imagen_producto) . '" 
-                            alt="' . htmlspecialchars($row['nombre']) . '" 
-                            class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-4">
-
-                        <h3 class="text-white text-lg font-semibold">
-                            ' . htmlspecialchars($row['nombre']) . '
-                        </h3>
-
-                        <p class="text-neutral-400 text-sm mt-2">
-                            ' . $descripcionLimitada . '
-                        </p>
-
-                        <p class="text-xl text-white font-semibold mt-4">
-                            $ ' . htmlspecialchars($row['precio']) . '
-                        </p>
-                        <button class="group cursor-pointer relative inline-flex h-12 items-center justify-center 
-                                      overflow-hidden rounded-md bg-yellow-400 px-6 font-medium text-gray-900 w-full mt-4 transition hover:scale-105">
-                            <span>Agregar al carrito</span>
-                            <div class="absolute inset-0 flex h-full w-full justify-center 
-                                        [transform:skew(-12deg)_translateX(-100%)] 
-                                        group-hover:duration-1000 
-                                        group-hover:[transform:skew(-12deg)_translateX(100%)]">
-                                <div class="relative h-full w-8 bg-white/20"></div>
-                            </div>
-                        </button>
-
-                    </div>
-                </div>';
+                include INCLUDES_PATH . 'productos_formato_card.php';
             }
 
         } else {
@@ -71,8 +50,15 @@ $result = $conn->query($sql);
         ?>
         </div>
     </div>
-
+      <div id="paginado-productos" class="flex gap-6 flex-wrap justify-center mt-4 mb-8">
+      <?php
+      for ($i = 1; $i <= $total_paginas; $i++) {
+        $color = ($i == $pagina_actual) ? "bg-yellow-400 text-gray-900 text-white hover:bg-gray-800" : "bg-gray-200 hover:bg-gray-800 hover:text-white text-black";
+        echo "<a class='px-5 py-3 font-bold rounded-lg $color' href='?page=$i'>$i</a>";
+      }
+      ?>
 </div>
+
 <?php
 include INCLUDES_PATH . 'footer.php';
 ?>

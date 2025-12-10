@@ -1,29 +1,40 @@
+
 <?php
 require_once __DIR__ . '/../../config.php';
 require_once INCLUDES_PATH . 'session.php';
 require_once INCLUDES_PATH . 'conexion.php';
 
-$user_display = "";
-$estaLogueado = isset($_SESSION['user']);
-$esAdmin = isset($admin) && $admin == 1;
+  $user_display = "";
+  $estaLogueado = isset($_SESSION['user']);
+  $esAdmin = isset($admin) && $admin == 1;
 
-if (isset($_SESSION['user'])) {
-  $user_display = $_SESSION['user'];
+  if (isset($_SESSION['user'])) {
+    $user_display = $_SESSION['user'];
+  }
+  
+$busquedaProducto = isset($_GET['busqueda-productos']) ? trim($_GET['busqueda-productos']) : '';
+if(!empty($busquedaProducto)) {
+    $stmt3 = $conn->prepare("SELECT p.id, p.nombre, p.precio, c.nombre AS categoria_nombre FROM productos p INNER JOIN categorias c ON p.categoria_id = c.id WHERE p.nombre LIKE ? OR c.nombre LIKE ?");
+    $busqueda_param = "%" . $busquedaProducto . "%";
+    $stmt3->bind_param("ss", $busqueda_param, $busqueda_param);
+    $stmt3->execute();
+    $resultadoBusqueda = $stmt3->get_result();
+    $stmt3->close();
 }
 
-$stmt = $conn->prepare("SELECT id, nombre FROM categorias WHERE mostrar_en_nav = 1");
-$stmt->execute();
-$categorias = $stmt->get_result();
+  $stmt = $conn->prepare("SELECT id, nombre FROM categorias WHERE mostrar_en_nav = 1");
+  $stmt->execute();
+  $categorias = $stmt->get_result();
 
-$subcategorias = [];
-$stmt_sub = $conn->prepare("SELECT id, nombre, categoria_padre_id FROM categorias WHERE categoria_padre_id IS NOT NULL");
-$stmt_sub->execute();
-$result_sub = $stmt_sub->get_result();
+  $subcategorias = [];
+  $stmt_sub = $conn->prepare("SELECT id, nombre, categoria_padre_id FROM categorias WHERE categoria_padre_id IS NOT NULL");
+  $stmt_sub->execute();
+  $result_sub = $stmt_sub->get_result();
 
-while ($subcat = $result_sub->fetch_assoc()) {
-  $subcategorias[$subcat['categoria_padre_id']][] = $subcat;
-}
-$categorias->data_seek(0);
+  while ($subcat = $result_sub->fetch_assoc()) {
+    $subcategorias[$subcat['categoria_padre_id']][] = $subcat;
+  }
+  $categorias->data_seek(0);
 ?>
 
 <div class="w-full bg-neutral-800 text-white text-xs text-center py-1">
@@ -31,11 +42,11 @@ $categorias->data_seek(0);
 </div>
                                           <!-- TODO (buscar un buen color o dejarlo asi) -->
 <nav class="relative w-full <?php echo $esAdmin ? 'bg-black' : 'bg-black'; ?> bg-opacity-90 backdrop-filter backdrop-blur-md px-4 py-3 z-50">
-  <div class="max-w-7xl mx-auto flex items-center justify-between relative">
+  <div class="lg:mx-65 flex items-center justify-between relative">
 
     <div class="w-full mx-auto flex items-center justify-between hidden lg:flex">
 
-      <div class="flex-shrink-0 w-1/5 flex items-center">
+      <div class="flex ml-auto xl:pr-30 items-center">
         <a href="<?php echo BASE_URL; ?>index.php" class="flex-shrink-0">
           <h1 class="font-bold text-2xl text-white tracking-widest hover:text-gray-300">
             ECO
@@ -43,11 +54,12 @@ $categorias->data_seek(0);
         </a>
       </div>
 
-      <div class="flex-grow flex justify-center mx-4 items-center" style="max-width: 55%;">
-        <div class="relative w-full">
-          <input type="text" placeholder="Buscar productos, componentes, marcas..."
+      <div class="flex-grow flex justify-center mx-4 xl:max-w-55% items-center">
+        <div class="relative lg:ml-20 w-full">
+          <form method="GET" action="<?php echo BASE_URL; ?>productos.php">
+          <input name="busqueda-productos" type="text" value="<?php echo isset($_GET['busqueda-productos']) ? htmlspecialchars($_GET['busqueda-productos']) : ''; ?>" placeholder="Buscar productos, componentes, marcas..."
             class="w-full pl-12 pr-4 py-2.5 text-base rounded-full bg-white text-gray-900 placeholder-gray-500 border border-transparent focus:outline-none focus:ring-2 focus:ring-gray-600 shadow-lg transition-shadow duration-200" />
-
+          </form>
           <svg class="absolute left-4 top-3 w-5 h-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
@@ -95,7 +107,6 @@ $categorias->data_seek(0);
               </svg>
             </a><?php
               } ?>
-
         </div>
         <a href="#" class="text-white hover:text-gray-300 transition-colors duration-200 p-1">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -148,11 +159,10 @@ $categorias->data_seek(0);
       <?php while ($cat = $categorias->fetch_assoc()) {
         $tieneSubcategorias = isset($subcategorias[$cat['id']]) && !empty($subcategorias[$cat['id']]);
       ?>
-        <li class="relative group <?php echo $tieneSubcategorias ? 'dropdown-item' : ''; ?>">
+        <li class="relative hover:text-white group <?php echo $tieneSubcategorias ? 'dropdown-item' : ''; ?>">
           <?php if ($tieneSubcategorias): ?>
             <!--<form method="POST" action="productos.php" style="display:inline;"> // Esto seria la categoria por ejemlo "componentes" que no tiene productos entonces no envia el post y solo se maneja con sus subcategorias-->
-            <input type="hidden" name="cat" value="<?= $cat['id'] //MENU NAV NORML
-                                                    ?>">
+            <input type="hidden" name="cat" value="<?= $cat['id'] //MENU NAV NORML?>">
             <button class="hover:text-white transition-colors duration-200 py-2 inline-block "
               style="background:none;border:none;color:inherit;cursor:pointer;font:inherit;">
               <?= htmlspecialchars($cat['nombre']) ?>
@@ -192,7 +202,7 @@ $categorias->data_seek(0);
   </div>
 </div>
 
-<div id="mobile-menu" class="hidden fixed top-0 left-0 w-full h-screen bg-black bg-opacity-95 backdrop-filter backdrop-blur-md z-40 lg:hidden py-10 px-6">
+<div id="mobile-menu" class="hidden fixed left-0 w-full h-screen overflow-auto bg-black bg-opacity-95 backdrop-filter backdrop-blur-md z-40 lg:hidden py-10 px-6">
   <div class="flex justify-end mb-8">
     <button id="close-mobile-menu" class="text-white hover:text-gray-300">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -225,7 +235,7 @@ $categorias->data_seek(0);
 
     <?php if ($esAdmin): ?>
       <li class="mb-4">
-        <button href="<?php echo ADMIN_URL . 'admin-panel.php' ?>" class="block py-2 text-red-400 hover:text-red-300 transition-colors duration-200 active:scale-95 border border-red-400 rounded-lg text-center font-bold">
+        <button href="<?php echo ADMIN_URL . 'admin-panel.php' ?>" class="block py-2 px-2 text-red-400 hover:text-red-300 transition-colors duration-200 active:scale-95 border border-red-400 rounded-lg text-center font-bold">
           Panel de Administración
         </button>
       </li>
@@ -271,26 +281,25 @@ $categorias->data_seek(0);
     <?php } ?>
   </ul>
 </div>
-
 <script>
-  const menuBtn = document.getElementById("menu-btn");
-  const mobileMenu = document.getElementById("mobile-menu");
-  const closeMobileMenuBtn = document.getElementById("close-mobile-menu");
+const menuBtn = document.getElementById("menu-btn");
+  const mobileMenu = document.getElementById("mobile-menu");
+  const closeMobileMenuBtn = document.getElementById("close-mobile-menu");
 
-  function toggleMobileMenu() {
-    if (mobileMenu.classList.contains("hidden")) {
-      mobileMenu.classList.remove("hidden");
-      document.body.style.overflow = "hidden";
-    } else {
-      mobileMenu.classList.add("hidden");
-      document.body.style.overflow = "auto";
-    }
-  }
+  function toggleMobileMenu() {
+    if (mobileMenu.classList.contains("hidden")) {
+      mobileMenu.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+    } else {
+      mobileMenu.classList.add("hidden");
+      document.body.style.overflow = "auto";
+    }
+  }
 
-  menuBtn.addEventListener("click", toggleMobileMenu);
+  menuBtn.addEventListener("click", toggleMobileMenu);
 
-  closeMobileMenuBtn.addEventListener("click", () => {
-    mobileMenu.classList.add("hidden");
-    document.body.style.overflow = "auto";
-  });
+  closeMobileMenuBtn.addEventListener("click", () => {
+    mobileMenu.classList.add("hidden");
+    document.body.style.overflow = "auto";
+  });
 </script>

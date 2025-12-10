@@ -31,7 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
          else {
             //echo $password;
-            echo ' / contraseña equivocada';
+            echo "<script>
+              alert('Contraseña equivocada');
+              window.location = '" . BASE_URL . "cuenta.php';
+                </script>";
             
         }
     } else {
