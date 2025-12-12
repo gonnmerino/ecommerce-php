@@ -1,6 +1,6 @@
 # Proyecto final de primer año de universidad – PHP + SQL
 <p align="center">
-  <img src="/src/images/image-github-3.jpg" width="600">
+  <img src="/src/images/image-github-2.jpg" width="600">
   <img src="/src/images/image-github.jpg" width="600">
 </p>
 Ecommerce de hardware componentes y afines con **ABM de productos, stock y panel de administracion con permisos de usuarios.**  
