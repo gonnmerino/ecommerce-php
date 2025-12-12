@@ -3,11 +3,11 @@ require_once __DIR__ . '/config.php';
 require_once INCLUDES_PATH . 'session.php';
 require_once INCLUDES_PATH . 'conexion.php';
 
-$categoria_id = 0;
-$busquedaProducto = isset($_GET['busqueda-productos']) ? trim($_GET['busqueda-productos']) : '';
-$productos = [];
-$modoBusqueda = false;
-$tituloPagina = 'Productos';
+  $categoria_id = 0;
+  $busquedaProducto = isset($_GET['busqueda-productos']) ? trim($_GET['busqueda-productos']) : '';
+  $productos = [];
+  $modoBusqueda = false;
+  $tituloPagina = 'Productos';
 
 if (!empty($busquedaProducto)) {
   $modoBusqueda = true;
