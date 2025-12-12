@@ -6,4 +6,3 @@ para poder probar el proyecto.
 Gracias por pasar.
 
 
->>>>>>> fdc0b2907ae479ae9fc8bc77b1e5e88f09609c21
