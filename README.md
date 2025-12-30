@@ -1,4 +1,4 @@
-# Proyecto final primer año universidad – PHP + SQL
+# Proyecto fin de año universidad – PHP + SQL
 <p align="center">
   <img src="/src/images/image-github-2.jpg" width="45%">
   <img src="/src/images/image-github.jpg" width="45%">
